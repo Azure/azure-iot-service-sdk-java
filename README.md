@@ -41,11 +41,7 @@ Due to security considerations, build logs are not publicly available.
 | Preview                  | [![Build Status](https://azure-iot-sdks.visualstudio.com/azure-iot-sdks/_apis/build/status/java/pull_request_validation/Java%20Canary?branchName=preview)](https://azure-iot-sdks.visualstudio.com/azure-iot-sdks/_build/latest?definitionId=245&branchName=preview)|
 
 This repository contains the following:
-
-* **Azure IoT Hub device SDK for Java**: connect client devices to Azure IoT Hub
 * **Azure IoT Hub service SDK for Java**: enables developing back-end applications for Azure IoT
-* **Azure IoT Device Provisioning device SDK for Java**: provision devices to Azure IoT Hub using Azure IoT Device Provisioning
-* **Azure IoT Device Provisioning service SDK for Java**: manage your Provisioning service instance from a back-end Java application
 
 To find SDKs in other languages for Azure IoT, please refer to the [azure-iot-sdks][azure-iot-sdks] repository
 
