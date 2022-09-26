@@ -12,7 +12,7 @@
     <artifactId>iot-e2e-tests</artifactId>
 	<name>IoT Hub Java E2E Tests</name>
 	<version>0.26.0</version>
-	<description>Test suite fot the Microsoft Azure IoT Device SDK for Java</description>
+	<description>Test suite fot the Microsoft Azure IoT Service SDK for Java</description>
     <packaging>pom</packaging>
     <developers>
         <developer>
