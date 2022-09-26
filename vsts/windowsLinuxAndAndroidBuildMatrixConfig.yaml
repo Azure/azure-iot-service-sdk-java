@@ -33,11 +33,6 @@ jobs:
           JAVA_VERSION: $(JAVA_VERSION)
           COMMIT_FROM: $(COMMIT_FROM)
 
-      - powershell: ./vsts/start_tpm_windows.ps1
-        displayName: 'Start TPM Simulator'
-        env:
-          COMMIT_FROM: $(COMMIT_FROM)
-
       - powershell: ./vsts/build_repo.ps1
         displayName: 'Build and Test'
         env:
