@@ -26,6 +26,7 @@ if (($env:JAVA_VERSION).equals("8"))
     else
     {
         #mvn -DRUN_DIGITAL_TESTS="$Env:runDigitalTwinTests" -DRUN_IOTHUB_TESTS="$Env:runIotHubTests" -DIS_PULL_REQUEST="$isPullRequestBuild" install -T 2C
+        Write-Host "JDK 8"
         mvn install -T 2C -DskipIntegrationTests=true
     }
 }
@@ -33,6 +34,7 @@ elseif (($env:JAVA_VERSION).equals("11"))
 {
     $env:JAVA_HOME=$env:JAVA_HOME_11_X64
     #mvn -DRUN_DIGITAL_TESTS="$Env:runDigitalTwinTests" -DRUN_IOTHUB_TESTS="$Env:runIotHubTests" -DIS_PULL_REQUEST="$isPullRequestBuild" install -T 2C -DskipUnitTests=true
+    Write-Host "JDK 11"
     mvn install -T 2C -DskipIntegrationTests=true
 }
 # Leaving this commented out to make it easy to add Java 17 support later
