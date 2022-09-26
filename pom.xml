@@ -172,20 +172,14 @@
         </dependencies>
     </dependencyManagement>
     <properties>
-        <iot-device-client-artifact-id>iot-device-client</iot-device-client-artifact-id>
         <iot-service-client-artifact-id>iot-service-client</iot-service-client-artifact-id>
-        <provisioning-device-client-artifact-id>provisioning-device-client</provisioning-device-client-artifact-id>
         <provisioning-service-client-artifact-id>provisioning-service-client</provisioning-service-client-artifact-id>
         <security-provider-artifact-id>security-provider</security-provider-artifact-id>
-        <tpm-provider-emulator-artifact-id>tpm-provider-emulator</tpm-provider-emulator-artifact-id>
-        <tpm-provider-artifact-id>tpm-provider</tpm-provider-artifact-id>
         <dice-provider-emulator-artifact-id>dice-provider-emulator</dice-provider-emulator-artifact-id>
         <dice-provider-artifact-id>dice-provider</dice-provider-artifact-id>
         <x509-provider-artifact-id>x509-provider</x509-provider-artifact-id>
 
-        <iot-device-client-version>2.0.5</iot-device-client-version>
         <iot-service-client-version>2.1.0</iot-service-client-version>
-        <provisioning-device-client-version>2.0.1</provisioning-device-client-version>
         <provisioning-service-client-version>2.0.1</provisioning-service-client-version>
         <security-provider-version>2.0.0</security-provider-version>
         <tpm-provider-emulator-version>2.0.0</tpm-provider-emulator-version>
