@@ -291,6 +291,7 @@ public class DigitalTwinClientTests extends IntegrationTest
         digitalTwinClient.getDigitalTwin(deviceId, BasicDigitalTwin.class);
     }
 
+    /* This test requires device to be online
     @Test
     @StandardTierHubOnlyTest
     public void invokeRootLevelCommand() throws IOException, InterruptedException, IotHubClientException
@@ -337,6 +338,7 @@ public class DigitalTwinClientTests extends IntegrationTest
         assertEquals(deviceSuccessResponseStatus, datePayloadResponseWithHeaders.body().getStatus());
         assertEquals(commandInput, datePayloadResponseWithHeaders.body().getPayload(String.class));
     }
+    */
 
     private static DigitalTwinClient buildDigitalTwinClientWithAzureSasCredential()
     {
