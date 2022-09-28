@@ -17,8 +17,8 @@ else
 if (($env:JAVA_VERSION).equals("8"))
 {
     $env:JAVA_HOME=$env:JAVA_HOME_8_X64
-    #mvn -DIS_PULL_REQUEST="$isPullRequestBuild" install -T 2C
-    mvn install -T 2C -DskipIntegrationTests=true
+    mvn -DIS_PULL_REQUEST="$isPullRequestBuild" install -T 2C
+    #mvn install -T 2C -DskipIntegrationTests=true
 }
 elseif (($env:JAVA_VERSION).equals("11"))
 {
