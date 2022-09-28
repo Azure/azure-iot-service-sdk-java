@@ -12,6 +12,7 @@ import com.microsoft.azure.sdk.iot.device.twin.Pair;
 import com.microsoft.azure.sdk.iot.device.transport.IotHubConnectionStatus;
 import com.microsoft.azure.sdk.iot.service.auth.AuthenticationType;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -34,6 +35,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Test class containing all error injection tests to be run on JVM and android pertaining to receiving messages.
  */
+@Ignore // Require device to run this test
 @ErrInjTest
 @IotHubTest
 @RunWith(Parameterized.class)
