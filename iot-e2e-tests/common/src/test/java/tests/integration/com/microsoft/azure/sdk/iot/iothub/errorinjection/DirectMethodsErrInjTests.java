@@ -13,6 +13,7 @@ import com.microsoft.azure.sdk.iot.device.IotHubStatusCode;
 import com.microsoft.azure.sdk.iot.device.Message;
 import com.microsoft.azure.sdk.iot.device.transport.IotHubConnectionStatus;
 import com.microsoft.azure.sdk.iot.service.auth.AuthenticationType;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -145,6 +146,7 @@ public class DirectMethodsErrInjTests extends DirectMethodsCommon
                 ErrorInjectionHelper.DefaultDurationInSec));
     }
 
+    @Ignore // Require device to run this test
     @Test
     @StandardTierHubOnlyTest
     @ContinuousIntegrationTest

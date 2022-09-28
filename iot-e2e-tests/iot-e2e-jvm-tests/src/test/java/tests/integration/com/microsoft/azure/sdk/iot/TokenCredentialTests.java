@@ -28,6 +28,7 @@ import com.microsoft.azure.sdk.iot.service.query.TwinQueryResponse;
 import com.microsoft.rest.ServiceResponseWithHeaders;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -53,6 +54,7 @@ public class TokenCredentialTests
 {
     private static final String THERMOSTAT_MODEL_ID = "dtmi:com:example:Thermostat;1";
 
+    @Ignore // Require device to run this test
     @Test (timeout = 10000)
     public void cloudToDeviceTelemetryWithTokenCredential() throws Exception
     {
@@ -85,6 +87,7 @@ public class TokenCredentialTests
         assertEquals(1, deviceGetAfter.getCloudToDeviceMessageCount());
     }
 
+    @Ignore // Require device to run this test
     @Test (timeout = 10000)
     public void getDigitalTwinWithTokenCredential() throws IOException, IotHubException, URISyntaxException, IotHubClientException
     {
@@ -107,6 +110,7 @@ public class TokenCredentialTests
         assertEquals(responseWithHeaders.body().getMetadata().getModelId(), THERMOSTAT_MODEL_ID);
     }
 
+    @Ignore // Require device to run this test
     @Test (timeout = 10000)
     public void deviceLifecycleWithTokenCredential() throws Exception
     {
@@ -133,6 +137,7 @@ public class TokenCredentialTests
         assertEquals(DeviceStatus.Disabled, deviceUpdated.getStatus());
     }
 
+    @Ignore // Require device to run this test
     @Test (timeout = 10000)
     public void invokeMethodSucceedWithTokenCredential() throws Exception
     {
@@ -156,6 +161,7 @@ public class TokenCredentialTests
         assertEquals(successStatusCode, (long) result.getStatus());
     }
 
+    @Ignore // Require device to run this test
     @Test (timeout = 10000)
     public void testGetDeviceTwinWithTokenCredential() throws IOException, InterruptedException, IotHubException, GeneralSecurityException, URISyntaxException
     {
@@ -172,6 +178,7 @@ public class TokenCredentialTests
         assertNotNull(twin.getETag());
     }
 
+    @Ignore // Require device to run this test
     @Test (timeout = 10000)
     public void testQueryTwinWithTokenCredential() throws IOException, InterruptedException, IotHubException, GeneralSecurityException, URISyntaxException
     {
