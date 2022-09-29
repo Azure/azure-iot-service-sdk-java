@@ -23,8 +23,8 @@ if (($env:JAVA_VERSION).equals("8"))
 elseif (($env:JAVA_VERSION).equals("11"))
 {
     $env:JAVA_HOME=$env:JAVA_HOME_11_X64
-    #mvn -DIS_PULL_REQUEST="$isPullRequestBuild" install -T 2C -DskipUnitTests=true
-    mvn install -T 2C -DskipIntegrationTests=true -DskipUnitTests=true
+    mvn -DIS_PULL_REQUEST="$isPullRequestBuild" install -T 2C -DskipUnitTests=true
+    #mvn install -T 2C -DskipIntegrationTests=true -DskipUnitTests=true
 }
 # Leaving this commented out to make it easy to add Java 17 support later
 #elseif (($env:JAVA_VERSION).equals("17"))
