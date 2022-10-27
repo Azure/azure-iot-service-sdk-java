@@ -62,16 +62,16 @@ public class DirectMethodsTests extends DirectMethodsCommon
         super(protocol, authenticationType, clientType);
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void invokeMethodSucceed() throws Exception
     {
         super.openDeviceClientAndSubscribeToMethods();
         super.invokeMethodSucceed();
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void invokeMethodSucceedWithAzureSasCredential() throws Exception
     {
         this.testInstance.methodServiceClient = buildDeviceMethodClientWithAzureSasCredential();
@@ -79,8 +79,8 @@ public class DirectMethodsTests extends DirectMethodsCommon
         super.invokeMethodSucceed();
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void serviceClientTokenRenewalWithAzureSasCredential() throws Exception
     {
         if (testInstance.protocol != IotHubClientProtocol.AMQPS
@@ -128,9 +128,9 @@ public class DirectMethodsTests extends DirectMethodsCommon
         super.invokeMethodSucceed();
     }
 
-    @Test
-    @StandardTierHubOnlyTest
-    @ContinuousIntegrationTest
+    //@Test
+    //@StandardTierHubOnlyTest
+    //@ContinuousIntegrationTest
     public void invokeMethodRecoverFromTimeoutSucceed() throws Exception
     {
         // Arrange
@@ -185,9 +185,9 @@ public class DirectMethodsTests extends DirectMethodsCommon
                 testInstance.identity.getClient()), METHOD_DELAY_IN_MILLISECONDS + ":succeed", result.getPayload(String.class));
     }
 
-    @Test
-    @StandardTierHubOnlyTest
-    @ContinuousIntegrationTest
+    //@Test
+    //@StandardTierHubOnlyTest
+    //@ContinuousIntegrationTest
     public void invokeMethodResponseTimeoutFailed() throws Exception
     {
         // Arrange
@@ -303,8 +303,8 @@ public class DirectMethodsTests extends DirectMethodsCommon
         }
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void invokeMethodWithServiceSideProxy() throws Exception
     {
         if (testInstance.protocol != IotHubClientProtocol.MQTT || testInstance.authenticationType != AuthenticationType.SAS || testInstance.clientType != ClientType.DEVICE_CLIENT)
@@ -338,8 +338,8 @@ public class DirectMethodsTests extends DirectMethodsCommon
         }
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void invokeMethodWithPayloadAsNull() throws Exception
     {
         // Direct method with null payload
@@ -347,8 +347,8 @@ public class DirectMethodsTests extends DirectMethodsCommon
         super.invokeHelper(null);
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void invokeMethodWithPayloadAsPrimitiveType() throws Exception
     {
         // Direct method payload in boolean (one of Primitive types)
@@ -357,8 +357,8 @@ public class DirectMethodsTests extends DirectMethodsCommon
         super.invokeHelper(bool);
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void invokeMethodWithPayloadAsString() throws Exception
     {
         // Direct method payload in String type
@@ -367,8 +367,8 @@ public class DirectMethodsTests extends DirectMethodsCommon
         super.invokeHelper(string);
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void invokeMethodWithPayloadAsArray() throws Exception
     {
         // Direct method payload in Array
@@ -377,8 +377,8 @@ public class DirectMethodsTests extends DirectMethodsCommon
         super.invokeHelper(bytes);
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void invokeMethodWithPayloadAsList() throws Exception
     {
         // Direct method payload in List type
@@ -390,8 +390,8 @@ public class DirectMethodsTests extends DirectMethodsCommon
         super.invokeHelper(list);
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void invokeMethodWithPayloadAsMap() throws Exception
     {
         // Direct method payload in Map type
@@ -402,8 +402,8 @@ public class DirectMethodsTests extends DirectMethodsCommon
         super.invokeHelper(map);
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void invokeMethodWithPayloadAsCustomObject() throws Exception
     {
         // Direct method payload in Custom type
@@ -412,9 +412,9 @@ public class DirectMethodsTests extends DirectMethodsCommon
         super.invokeHelper(customObject);
     }
 
-    @Test
-    @StandardTierHubOnlyTest
-    @ContinuousIntegrationTest
+    //@Test
+    //@StandardTierHubOnlyTest
+    //@ContinuousIntegrationTest
     public void subscribeToDirectMethodsOverwritesPreviousCallbacks() throws Exception
     {
         this.testInstance.setup();

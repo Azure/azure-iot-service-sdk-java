@@ -57,7 +57,7 @@ public class SendMessagesTests extends SendMessagesCommon
         super(protocol, authenticationType, clientType, withProxy);
     }
 
-    @Test
+    //@Test
     public void sendMessages() throws Exception
     {
         this.testInstance.setup();
@@ -67,7 +67,7 @@ public class SendMessagesTests extends SendMessagesCommon
 
     // Ensure that a user can use a device/module client as soon as the connection status callback executes with status CONNECTED
     // even from the callback itself
-    @Test
+    //@Test
     public void sendMessagesFromConnectionStatusChangeCallback() throws Exception
     {
         Success messageSent = new Success();
@@ -116,7 +116,7 @@ public class SendMessagesTests extends SendMessagesCommon
         testInstance.identity.getClient().close();
     }
 
-    @Test
+    //@Test
     public void openClientWithRetry() throws Exception
     {
         this.testInstance.setup();
@@ -124,7 +124,7 @@ public class SendMessagesTests extends SendMessagesCommon
         this.testInstance.identity.getClient().close();
     }
 
-    @Test
+    //@Test
     public void sendMessagesWithCustomSasTokenProvider() throws Exception
     {
         Assume.assumeTrue(testInstance.authenticationType == SAS);
@@ -134,7 +134,7 @@ public class SendMessagesTests extends SendMessagesCommon
         IotHubServicesCommon.sendMessages(testInstance.identity.getClient(), testInstance.protocol, NORMAL_MESSAGES_TO_SEND, RETRY_MILLISECONDS, SEND_TIMEOUT_MILLISECONDS, 0, null);
     }
 
-    @Test
+    //@Test
     public void sendBulkMessages() throws Exception
     {
         this.testInstance.setup();
@@ -142,8 +142,8 @@ public class SendMessagesTests extends SendMessagesCommon
         IotHubServicesCommon.sendBulkMessages(testInstance.identity.getClient(), testInstance.protocol, NORMAL_MESSAGES_TO_SEND, RETRY_MILLISECONDS, SEND_TIMEOUT_MILLISECONDS, 0, null);
     }
 
-    @Test
-    @ContinuousIntegrationTest
+    //@Test
+    //@ContinuousIntegrationTest
     public void sendManySmallMessagesAsBatch() throws Exception
     {
         // Only send batch messages in large quantities when using HTTPS protocol.
@@ -154,8 +154,8 @@ public class SendMessagesTests extends SendMessagesCommon
         IotHubServicesCommon.sendBulkMessages(testInstance.identity.getClient(), testInstance.protocol, MULTIPLE_SMALL_MESSAGES_TO_SEND, RETRY_MILLISECONDS, SEND_TIMEOUT_MILLISECONDS, 0, null);
     }
 
-    @Test
-    @ContinuousIntegrationTest
+    //@Test
+    //@ContinuousIntegrationTest
     public void sendLargestMessages() throws Exception
     {
         this.testInstance.setup();
@@ -163,8 +163,8 @@ public class SendMessagesTests extends SendMessagesCommon
         IotHubServicesCommon.sendMessages(testInstance.identity.getClient(), testInstance.protocol, LARGE_MESSAGES_TO_SEND, RETRY_MILLISECONDS, SEND_TIMEOUT_MILLISECONDS, 0, null);
     }
 
-    @Test
-    @ContinuousIntegrationTest
+    //@Test
+    //@ContinuousIntegrationTest
     public void sendMessagesWithUnusualApplicationProperties() throws Exception
     {
         this.testInstance.setup();
@@ -178,8 +178,8 @@ public class SendMessagesTests extends SendMessagesCommon
         this.testInstance.identity.getClient().close();
     }
 
-    @Test
-    @ContinuousIntegrationTest
+    //@Test
+    //@ContinuousIntegrationTest
     public void expiredMessagesAreNotSent() throws Exception
     {
         // Not worth testing for both w/ and w/o proxy
@@ -190,7 +190,7 @@ public class SendMessagesTests extends SendMessagesCommon
         IotHubServicesCommon.sendExpiredMessageExpectingMessageExpiredCallback(testInstance.identity.getClient(), testInstance.protocol, RETRY_MILLISECONDS, SEND_TIMEOUT_MILLISECONDS, testInstance.authenticationType);
     }
 
-    @Test
+    //@Test
     public void sendMessagesWithCustomSSLContextAndSasAuth() throws Exception
     {
         //only testing sas based auth with custom ssl context here
@@ -227,8 +227,8 @@ public class SendMessagesTests extends SendMessagesCommon
         deviceClient.close();
     }
 
-    @Test
-    @ContinuousIntegrationTest
+    //@Test
+    //@ContinuousIntegrationTest
     public void sendTooLargeMessage() throws Exception
     {
         // The service responds to a excessively large message by killing the TCP connection when connecting over MQTT

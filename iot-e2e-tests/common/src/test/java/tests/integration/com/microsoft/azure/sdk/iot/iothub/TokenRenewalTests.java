@@ -112,7 +112,7 @@ public class TokenRenewalTests extends IntegrationTest
      * Http           : No connection status callback, but should be able to send a message after the first generated sas token has expired
      * @throws Exception if the test fails in any way
      */
-    @Test
+    //@Test
     // While this test is long enough to be considered a continuous integration test, it is the only test that truly validates
     // that the device client's token renewal logic works. Because of that, it needs to be run at the gate.
     //@ContinuousIntegrationTest
