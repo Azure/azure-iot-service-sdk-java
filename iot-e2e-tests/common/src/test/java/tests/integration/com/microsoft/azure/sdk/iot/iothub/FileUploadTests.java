@@ -62,7 +62,7 @@ import static org.junit.Assume.assumeFalse;
  * Test class containing all tests to be run on JVM and android pertaining to FileUpload.
  */
 @Slf4j
-@IotHubTest
+//@IotHubTest
 @RunWith(Parameterized.class)
 public class FileUploadTests extends IntegrationTest
 {

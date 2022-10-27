@@ -33,8 +33,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeFalse;
 
-@IotHubTest
-@StandardTierHubOnlyTest
+//@IotHubTest
+//@StandardTierHubOnlyTest
 @RunWith(Parameterized.class)
 public class TwinTests extends TwinCommon
 {

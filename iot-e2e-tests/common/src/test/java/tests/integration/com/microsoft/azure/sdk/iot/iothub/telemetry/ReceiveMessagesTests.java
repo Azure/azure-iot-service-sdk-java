@@ -42,7 +42,7 @@ import static junit.framework.TestCase.fail;
 /**
  * Test class containing all non error injection tests to be run on JVM and android pertaining to receiving messages on a device/module.
  */
-@IotHubTest
+//@IotHubTest
 @RunWith(Parameterized.class)
 public class ReceiveMessagesTests extends ReceiveMessagesCommon
 {
