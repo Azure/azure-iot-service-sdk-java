@@ -78,8 +78,8 @@ public class QueryClientTests extends IntegrationTest
         hostName = IotHubConnectionStringBuilder.createIotHubConnectionString(iotHubConnectionString).getHostName();
     }
 
-    @Test
-    @StandardTierHubOnlyTest
+    //@Test
+    //@StandardTierHubOnlyTest
     public void testQueryTwins() throws IOException, IotHubException, InterruptedException
     {
         String deviceId1 = UUID.randomUUID().toString();
