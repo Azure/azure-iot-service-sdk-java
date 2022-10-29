@@ -35,7 +35,7 @@ import static org.junit.Assume.assumeFalse;
 
 //@IotHubTest
 //@StandardTierHubOnlyTest
-@RunWith(Parameterized.class)
+//@RunWith(Parameterized.class)
 public class TwinTests extends TwinCommon
 {
     public TwinTests(IotHubClientProtocol protocol, AuthenticationType authenticationType, ClientType clientType) throws IOException, InterruptedException, IotHubException, URISyntaxException, GeneralSecurityException

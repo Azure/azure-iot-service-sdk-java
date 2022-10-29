@@ -63,7 +63,7 @@ import static org.junit.Assume.assumeFalse;
  */
 @Slf4j
 //@IotHubTest
-@RunWith(Parameterized.class)
+//@RunWith(Parameterized.class)
 public class FileUploadTests extends IntegrationTest
 {
     // Max time to wait to see it on Hub
