@@ -125,22 +125,22 @@ public class MessagingClientTests extends IntegrationTest
         proxyServer.stop();
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void cloudToDeviceTelemetry() throws Exception
     {
         cloudToDeviceTelemetry(false, true, false, false, false);
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void cloudToDeviceTelemetryWithCustomSSLContext() throws Exception
     {
         cloudToDeviceTelemetry(false, true, false, true, false);
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void cloudToDeviceTelemetryWithProxy() throws Exception
     {
         //Proxy support only exists for AMQPS_WS currently
@@ -149,8 +149,8 @@ public class MessagingClientTests extends IntegrationTest
         cloudToDeviceTelemetry(true, true, false, false, false);
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void cloudToDeviceTelemetryWithProxyAndCustomSSLContext() throws Exception
     {
         //Proxy support only exists for AMQPS_WS currently
@@ -159,32 +159,32 @@ public class MessagingClientTests extends IntegrationTest
         cloudToDeviceTelemetry(true, true, false, true, false);
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
-    //@ContinuousIntegrationTest
+    @Test
+    @StandardTierHubOnlyTest
+    @ContinuousIntegrationTest
     public void cloudToDeviceTelemetryWithNoPayload() throws Exception
     {
         cloudToDeviceTelemetry(false, false, false, false, false);
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void cloudToDeviceTelemetryWithAzureSasCredential() throws Exception
     {
         cloudToDeviceTelemetry(false, true, false, false, true);
     }
 
-    //@Test
-    //@ContinuousIntegrationTest
-    //@StandardTierHubOnlyTest
+    @Test
+    @ContinuousIntegrationTest
+    @StandardTierHubOnlyTest
     public void cloudToDeviceTelemetryWithMaxPayloadSize() throws Exception
     {
         cloudToDeviceTelemetry(false, true, true, false, false);
     }
 
-    //@Test
-    //@ContinuousIntegrationTest
-    //@StandardTierHubOnlyTest
+    @Test
+    @ContinuousIntegrationTest
+    @StandardTierHubOnlyTest
     public void cloudToDeviceTelemetryWithMaxPayloadSizeAndProxy() throws Exception
     {
         //Proxy support only exists for AMQPS_WS currently
@@ -282,8 +282,8 @@ public class MessagingClientTests extends IntegrationTest
         assertEquals(buildExceptionMessage("", hostName), 1, deviceGetAfter.getCloudToDeviceMessageCount());
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void messagingClientTokenRenewalWithAzureSasCredential() throws Exception
     {
         TestDeviceIdentity testDeviceIdentity =
@@ -365,9 +365,9 @@ public class MessagingClientTests extends IntegrationTest
         assertTrue(buildExceptionMessage("Expected an exception due to service presenting invalid certificate", hostName), expectedExceptionWasCaught);
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
-    //@ContinuousIntegrationTest
+    @Test
+    @StandardTierHubOnlyTest
+    @ContinuousIntegrationTest
     public void cloudToDeviceTelemetryWithTooLargeMessageThrows() throws IOException, GeneralSecurityException, IotHubException, URISyntaxException, TimeoutException, InterruptedException
     {
         // We remove and recreate the device for a clean start
