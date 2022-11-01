@@ -42,8 +42,8 @@ import static junit.framework.TestCase.fail;
 /**
  * Test class containing all non error injection tests to be run on JVM and android pertaining to receiving messages on a device/module.
  */
-//@IotHubTest
-//@RunWith(Parameterized.class)
+@IotHubTest
+@RunWith(Parameterized.class)
 public class ReceiveMessagesTests extends ReceiveMessagesCommon
 {
     public ReceiveMessagesTests(IotHubClientProtocol protocol, AuthenticationType authenticationType, ClientType clientType) throws Exception
@@ -58,8 +58,8 @@ public class ReceiveMessagesTests extends ReceiveMessagesCommon
         super.setupTest();
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void receiveMessage() throws Exception
     {
         receiveMessage(MESSAGE_SIZE_IN_BYTES);
