@@ -278,7 +278,7 @@ public class MultiplexingClientTests extends IntegrationTest
 
     // MultiplexingClient should be able to open an AMQP connection to IoTHub with no device sessions, and should
     // allow for device sessions to be added and used later.
-    //@Test
+    @Test
     public void openMultiplexingClientWithoutAnyRegisteredDevices() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -292,7 +292,7 @@ public class MultiplexingClientTests extends IntegrationTest
         testInstance.multiplexingClient.close();
     }
 
-    //@Test
+    @Test
     public void canUnregisterAllClientsThenReregisterAllClientsOnOpenConnection() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -306,8 +306,8 @@ public class MultiplexingClientTests extends IntegrationTest
         testInstance.multiplexingClient.close();
     }
 
-    //@ContinuousIntegrationTest
-    //@Test
+    @ContinuousIntegrationTest
+    @Test
     public void canReopenClosedMultiplexingClient() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -481,7 +481,7 @@ public class MultiplexingClientTests extends IntegrationTest
         log.debug("Close time: " + (finishCloseTime - startCloseTime) / 1000.0);
     }
 
-    //@Test
+    @Test
     public void sendMessagesWithProxy() throws Exception
     {
         if (testInstance.protocol != IotHubClientProtocol.AMQPS_WS)
@@ -550,8 +550,8 @@ public class MultiplexingClientTests extends IntegrationTest
         assertTrue("Unexpected callback result: " + messageSendSuccess.getCallbackStatusCode(), messageSendSuccess.getResult());
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void receiveMessagesIncludingProperties() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -572,8 +572,8 @@ public class MultiplexingClientTests extends IntegrationTest
     }
 
     // MessageCallback for cloud to device messages should not be preserved between registrations by default
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void cloudToDeviceMessageSubscriptionNotPreservedByDeviceClientAfterUnregistration() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -656,8 +656,8 @@ public class MultiplexingClientTests extends IntegrationTest
         }
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void invokeMethodSucceed() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -677,9 +677,9 @@ public class MultiplexingClientTests extends IntegrationTest
     }
 
     // Methods subscriptions and callbacks should not be preserved between registrations by default
-    //@Test
-    //@ContinuousIntegrationTest
-    //@StandardTierHubOnlyTest
+    @Test
+    @ContinuousIntegrationTest
+    @StandardTierHubOnlyTest
     public void methodsSubscriptionNotPreservedByDeviceClientAfterUnregistration() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -765,8 +765,8 @@ public class MultiplexingClientTests extends IntegrationTest
     }
 
 
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void testTwin() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT, MultiplexingClientOptions.builder().build(), true);
@@ -808,9 +808,9 @@ public class MultiplexingClientTests extends IntegrationTest
     }
 
     // Twin subscriptions and callbacks should not be preserved between registrations by default
-    //@Test
-    //@ContinuousIntegrationTest
-    //@StandardTierHubOnlyTest
+    @Test
+    @ContinuousIntegrationTest
+    @StandardTierHubOnlyTest
     public void twinSubscriptionNotPreservedByDeviceClientAfterUnregistration() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT, MultiplexingClientOptions.builder().build(), true);
@@ -988,8 +988,8 @@ public class MultiplexingClientTests extends IntegrationTest
 
     // Unregister a single device from an active multiplexed connection, test that other devices on that connection
     // can still be used to send telemetry.
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void registerClientAfterOpen() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -1012,8 +1012,8 @@ public class MultiplexingClientTests extends IntegrationTest
 
     // Unregister a single device from an active multiplexed connection, test that other devices on that connection
     // can still be used to send telemetry.
-    //@Test
-    //@StandardTierHubOnlyTest
+    @Test
+    @StandardTierHubOnlyTest
     public void unregisterClientAfterOpen() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -1330,8 +1330,8 @@ public class MultiplexingClientTests extends IntegrationTest
 
     // Attempt to register a single device with the wrong connection string. The thrown exception
     // should contain all the exceptions thrown by the service.
-    //@ContinuousIntegrationTest
-    //@Test
+    @ContinuousIntegrationTest
+    @Test
     public void registerDeviceWithIncorrectCredentialsAfterOpenThrows() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -1367,8 +1367,8 @@ public class MultiplexingClientTests extends IntegrationTest
 
     // Before opening the multiplexed connection, register a single device with incorrect credentials. Opening the client
     // should throw and the thrown exception should have details on why the open failed
-    //@ContinuousIntegrationTest
-    //@Test
+    @ContinuousIntegrationTest
+    @Test
     public void registerDeviceWithIncorrectCredentialsBeforeOpenThrowsOnOpen() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -1403,8 +1403,8 @@ public class MultiplexingClientTests extends IntegrationTest
 
     // Attempt to register a batch of devices, all with the wrong connection string. The thrown exception
     // should contain all the exceptions thrown by the service.
-    //@ContinuousIntegrationTest
-    //@Test
+    @ContinuousIntegrationTest
+    @Test
     public void registerDevicesWithIncorrectCredentialsAfterOpenThrows() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -1460,8 +1460,8 @@ public class MultiplexingClientTests extends IntegrationTest
         assertTrue("Expected exception was not thrown", expectedExceptionThrown);
     }
 
-    //@ContinuousIntegrationTest
-    //@Test
+    @ContinuousIntegrationTest
+    @Test
     public void registerDevicesWithIncorrectCredentialsBeforeOpenThrowsOnOpen() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -1515,7 +1515,7 @@ public class MultiplexingClientTests extends IntegrationTest
         assertTrue("Expected exception was not thrown", expectedExceptionThrown);
     }
 
-    //@Test
+    @Test
     public void registrationsUnwindForMqttClient() throws Exception
     {
         Device mqttDevice = Tools.getTestDevice(iotHubConnectionString, IotHubClientProtocol.MQTT, AuthenticationType.SAS, false).getDevice();
@@ -1526,7 +1526,7 @@ public class MultiplexingClientTests extends IntegrationTest
         registrationsUnwindForUnsupportedOperationExceptions(mqttDeviceClient);
     }
 
-    //@Test
+    @Test
     public void registrationsUnwindForX509Client() throws Exception
     {
         // Create a new device client that uses x509 auth, which should throw an UnsupportedOperationException
@@ -1538,7 +1538,7 @@ public class MultiplexingClientTests extends IntegrationTest
         registrationsUnwindForUnsupportedOperationExceptions(x509DeviceClient);
     }
 
-    //@Test
+    @Test
     public void registrationsUnwindForAlreadyOpenClient() throws Exception
     {
         Device nonMultiplexedDevice = Tools.getTestDevice(iotHubConnectionString, testInstance.protocol, AuthenticationType.SAS, false).getDevice();
@@ -1551,7 +1551,7 @@ public class MultiplexingClientTests extends IntegrationTest
         nonMultiplexedDeviceClient.close();
     }
 
-    //@Test
+    @Test
     public void registrationsUnwindForClientOfDifferentHostName() throws Exception
     {
         Device nonMultiplexedDevice = Tools.getTestDevice(iotHubConnectionString, testInstance.protocol, AuthenticationType.SAS, false).getDevice();
@@ -1569,7 +1569,7 @@ public class MultiplexingClientTests extends IntegrationTest
         registrationsUnwindForUnsupportedOperationExceptions(deviceClientWithDifferentHostName);
     }
 
-    //@Test
+    @Test
     public void registrationsUnwindForDifferentProtocolClient() throws Exception
     {
         // Protocol for the new client is AMQPS if the test parameters are for AMQPS_WS, and vice versa. MultiplexingClient
@@ -1586,8 +1586,8 @@ public class MultiplexingClientTests extends IntegrationTest
 
     // If you disable a device on an active multiplexed connection, that device session should drop and all the other
     // device sessions should be unaffected.
-    //@ContinuousIntegrationTest
-    //@Test
+    @ContinuousIntegrationTest
+    @Test
     public void disableDeviceAfterOpenAndAfterRegistration() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -1645,8 +1645,8 @@ public class MultiplexingClientTests extends IntegrationTest
 
     // If you register a disabled device to an active multiplexed connection, the other devices on the connection
     // should not be affected nor should the multiplexed connection itself.
-    //@ContinuousIntegrationTest
-    //@Test
+    @ContinuousIntegrationTest
+    @Test
     public void disableDeviceAfterOpenBeforeRegister() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -1753,8 +1753,8 @@ public class MultiplexingClientTests extends IntegrationTest
         }
     }
 
-    //@ContinuousIntegrationTest
-    //@Test
+    @ContinuousIntegrationTest
+    @Test
     public void failedRegistrationDoesNotAffectSubsequentRegistrations() throws Exception
     {
         testInstance.setup(0);
