@@ -68,9 +68,9 @@ public class ReceiveMessagesTests extends ReceiveMessagesCommon
     // Test out receiving a near-maximum sized cloud to device message both for testing the sending of it from the
     // service client, but also to test how MQTT/HTTPS/AMQPS handle it on the receiving side. AMQP in particular
     // has some "partial delivery" scenarios that are worth having an e2e test around.
-    //@Test
-    //@ContinuousIntegrationTest
-    //@StandardTierHubOnlyTest
+    @Test
+    @ContinuousIntegrationTest
+    @StandardTierHubOnlyTest
     public void receiveLargeMessage() throws Exception
     {
         receiveMessage(LARGE_MESSAGE_SIZE_IN_BYTES);
