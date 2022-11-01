@@ -238,8 +238,8 @@ public class TwinTests extends TwinCommon
 
     // Both updateReportedPropertiesAsync and getTwinAsync have overloads that expose a verbose state callback detailing
     // when a message is queued, sent, ack'd, etc. This test makes sure that those callbacks are all executed as expected and in order.
-    //@ContinuousIntegrationTest
-    //@Test
+    @ContinuousIntegrationTest
+    @Test
     public void testCorrelatingMessageCallbackOverloads() throws TimeoutException, InterruptedException, IOException, IotHubException, IotHubClientException
     {
         final String desiredPropertyKey = UUID.randomUUID().toString();
@@ -470,9 +470,9 @@ public class TwinTests extends TwinCommon
         }
     }
 
-    @Test
-    @StandardTierHubOnlyTest
-    @ContinuousIntegrationTest
+    //@Test
+    //@StandardTierHubOnlyTest
+    //@ContinuousIntegrationTest
     public void subscribeToDesiredPropertiesOverwritesPreviousCallbacks() throws Exception
     {
         this.testInstance.setup();
