@@ -57,7 +57,7 @@ public class SendMessagesTests extends SendMessagesCommon
         super(protocol, authenticationType, clientType, withProxy);
     }
 
-    //@Test
+    @Test
     public void sendMessages() throws Exception
     {
         this.testInstance.setup();
