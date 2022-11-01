@@ -33,9 +33,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeFalse;
 
-//@IotHubTest
-//@StandardTierHubOnlyTest
-//@RunWith(Parameterized.class)
+@IotHubTest
+@StandardTierHubOnlyTest
+@RunWith(Parameterized.class)
 public class TwinTests extends TwinCommon
 {
     public TwinTests(IotHubClientProtocol protocol, AuthenticationType authenticationType, ClientType clientType) throws IOException, InterruptedException, IotHubException, URISyntaxException, GeneralSecurityException
@@ -49,7 +49,7 @@ public class TwinTests extends TwinCommon
         this.testInstance.setup();
     }
 
-    //@Test
+    @Test
     public void testBasicTwinFlow() throws InterruptedException, IOException, IotHubException, TimeoutException, IotHubClientException
     {
         super.testBasicTwinFlow(true);
