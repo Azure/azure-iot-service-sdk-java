@@ -55,7 +55,7 @@ public class TwinTests extends TwinCommon
         super.testBasicTwinFlow(true);
     }
 
-    //@Test
+    @Test
     public void receiveMultipleDesiredPropertiesAtOnce() throws IOException, InterruptedException, IotHubException, TimeoutException, IotHubClientException
     {
         final String desiredPropertyKey1 = UUID.randomUUID().toString();
@@ -88,7 +88,7 @@ public class TwinTests extends TwinCommon
         assertTrue(isPropertyInTwinCollection(desiredPropertyUpdate.getDesiredProperties(), desiredPropertyKey2, desiredPropertyValue2));
     }
 
-    //@Test
+    @Test
     public void receiveMultipleDesiredPropertiesSequentially() throws IOException, InterruptedException, IotHubException, TimeoutException, IotHubClientException
     {
         final String desiredPropertyKey1 = UUID.randomUUID().toString();
@@ -138,7 +138,7 @@ public class TwinTests extends TwinCommon
         assertTrue(isPropertyInTwinCollection(desiredPropertyUpdate.getDesiredProperties(), desiredPropertyKey2, desiredPropertyValue2));
     }
 
-    //@Test
+    @Test
     public void sendMultipleReportedPropertiesAtOnce() throws IOException, TimeoutException, InterruptedException, IotHubException, IotHubClientException
     {
         final String reportedPropertyKey1 = UUID.randomUUID().toString();
@@ -174,7 +174,7 @@ public class TwinTests extends TwinCommon
         assertNotNull(serviceTwin.getReportedProperties().getTwinMetadata(reportedPropertyKey2).getLastUpdated());
     }
 
-    //@Test
+    @Test
     public void sendMultipleReportedPropertiesSequentially() throws TimeoutException, InterruptedException, IOException, IotHubException, IotHubClientException
     {
         final String reportedPropertyKey1 = UUID.randomUUID().toString();
@@ -207,7 +207,7 @@ public class TwinTests extends TwinCommon
         assertTrue(isPropertyInTwinCollection(serviceClientTwin.getReportedProperties(), reportedPropertyKey2, reportedPropertyValue2));
     }
 
-    //@Test
+    @Test
     public void canDeleteReportedProperties() throws IOException, TimeoutException, InterruptedException, IotHubException, IotHubClientException
     {
         final String reportedPropertyKey = UUID.randomUUID().toString();
@@ -238,8 +238,8 @@ public class TwinTests extends TwinCommon
 
     // Both updateReportedPropertiesAsync and getTwinAsync have overloads that expose a verbose state callback detailing
     // when a message is queued, sent, ack'd, etc. This test makes sure that those callbacks are all executed as expected and in order.
-    //@ContinuousIntegrationTest
-    //@Test
+    @ContinuousIntegrationTest
+    @Test
     public void testCorrelatingMessageCallbackOverloads() throws TimeoutException, InterruptedException, IOException, IotHubException, IotHubClientException
     {
         final String desiredPropertyKey = UUID.randomUUID().toString();
@@ -430,7 +430,7 @@ public class TwinTests extends TwinCommon
 
     // If the user sends a reported properties update with an out of date reported properties version, the client should
     // throw a PRECONDITION_FAILED error code
-    //@Test
+    @Test
     public void sendMultipleReportedPropertiesChecksForVersion() throws Exception
     {
         // IoT hub appears to ignore the sent version for AMQP. Probably a service bug.
@@ -470,9 +470,9 @@ public class TwinTests extends TwinCommon
         }
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
-    //@ContinuousIntegrationTest
+    @Test
+    @StandardTierHubOnlyTest
+    @ContinuousIntegrationTest
     public void subscribeToDesiredPropertiesOverwritesPreviousCallbacks() throws Exception
     {
         this.testInstance.setup();
