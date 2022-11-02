@@ -62,8 +62,8 @@ import static org.junit.Assume.assumeFalse;
  * Test class containing all tests to be run on JVM and android pertaining to FileUpload.
  */
 @Slf4j
-@IotHubTest
-@RunWith(Parameterized.class)
+//@IotHubTest
+//@RunWith(Parameterized.class)
 public class FileUploadTests extends IntegrationTest
 {
     // Max time to wait to see it on Hub
@@ -237,7 +237,7 @@ public class FileUploadTests extends IntegrationTest
         tearDownDeviceClient(deviceClient);
     }
 
-    @Test (timeout = MAX_MILLISECS_TIMEOUT_KILL_TEST)
+    //@Test (timeout = MAX_MILLISECS_TIMEOUT_KILL_TEST)
     public void getAndCompleteSasUriWithMultipleUploads() throws URISyntaxException, IOException, InterruptedException, IotHubException, GeneralSecurityException, StorageException, TimeoutException, IotHubClientException
     {
         // Android has some compatibility issues with the azure storage SDK
