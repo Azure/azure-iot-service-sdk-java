@@ -203,7 +203,7 @@ public class FileUploadTests extends IntegrationTest
         tearDownDeviceClient(deviceClient);
     }
 
-    @Test (timeout = MAX_MILLISECS_TIMEOUT_KILL_TEST)
+    //@Test (timeout = MAX_MILLISECS_TIMEOUT_KILL_TEST)
     public void getAndCompleteSasUriWithUpload() throws URISyntaxException, IOException, InterruptedException, IotHubException, GeneralSecurityException, StorageException, TimeoutException, IotHubClientException
     {
         // Android has some compatibility issues with the azure storage SDK
@@ -237,7 +237,7 @@ public class FileUploadTests extends IntegrationTest
         tearDownDeviceClient(deviceClient);
     }
 
-    //@Test (timeout = MAX_MILLISECS_TIMEOUT_KILL_TEST)
+    @Test (timeout = MAX_MILLISECS_TIMEOUT_KILL_TEST)
     public void getAndCompleteSasUriWithMultipleUploads() throws URISyntaxException, IOException, InterruptedException, IotHubException, GeneralSecurityException, StorageException, TimeoutException, IotHubClientException
     {
         // Android has some compatibility issues with the azure storage SDK
