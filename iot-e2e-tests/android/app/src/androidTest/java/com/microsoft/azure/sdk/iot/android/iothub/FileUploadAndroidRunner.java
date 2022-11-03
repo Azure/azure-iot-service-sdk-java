@@ -12,8 +12,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import tests.integration.com.microsoft.azure.sdk.iot.iothub.FileUploadTests;
 
-//@TestGroup10
-//@RunWith(Parameterized.class)
+@TestGroup10
+@RunWith(Parameterized.class)
 public class FileUploadAndroidRunner extends FileUploadTests
 {
     public FileUploadAndroidRunner(IotHubClientProtocol protocol, AuthenticationType authenticationType, boolean withProxy) throws Exception {
