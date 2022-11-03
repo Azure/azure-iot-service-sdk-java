@@ -228,7 +228,7 @@ public class MultiplexingClientTests extends IntegrationTest
         proxyServer.stop();
     }
 
-    //@Test
+    @Test
     public void openClientWithRetry() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);
@@ -244,7 +244,7 @@ public class MultiplexingClientTests extends IntegrationTest
         testInstance.multiplexingClient.close();
     }
 
-    //@Test
+    @Test
     public void sendMessages() throws Exception
     {
         testInstance.setup(DEVICE_MULTIPLEX_COUNT);

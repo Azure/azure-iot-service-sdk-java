@@ -47,7 +47,7 @@ public class TwinClientTests extends IntegrationTest
         isPullRequest = Boolean.parseBoolean(Tools.retrieveEnvironmentVariableValue(TestConstants.IS_PULL_REQUEST));
     }
 
-    //@Test
+    @Test
     public void testTwinTags() throws IOException, GeneralSecurityException, IotHubException, URISyntaxException
     {
         TestDeviceIdentity testDeviceIdentity = Tools.getTestDevice(iotHubConnectionString, IotHubClientProtocol.AMQPS, AuthenticationType.SAS, true);
@@ -77,7 +77,7 @@ public class TwinClientTests extends IntegrationTest
         }
     }
 
-    //@Test
+    @Test
     public void testPatchTwin() throws IOException, GeneralSecurityException, IotHubException, URISyntaxException
     {
         TestDeviceIdentity testDeviceIdentity = Tools.getTestDevice(iotHubConnectionString, IotHubClientProtocol.AMQPS, AuthenticationType.SAS, true);
@@ -100,7 +100,7 @@ public class TwinClientTests extends IntegrationTest
         assertNotNull(twin.getDesiredProperties().getTwinMetadata(expectedDesiredPropertyKey).getLastUpdated());
     }
 
-    //@Test
+    @Test
     public void testPatchTwinToDeleteDesiredProperty() throws IOException, GeneralSecurityException, IotHubException, URISyntaxException
     {
         TestDeviceIdentity testDeviceIdentity = Tools.getTestDevice(iotHubConnectionString, IotHubClientProtocol.AMQPS, AuthenticationType.SAS, true);
@@ -122,7 +122,7 @@ public class TwinClientTests extends IntegrationTest
         assertFalse(TwinCommon.isPropertyInTwinCollection(twin.getDesiredProperties(), expectedDesiredPropertyKey, expectedDesiredPropertyValue));
     }
 
-    //@Test
+    @Test
     public void testReplaceTwin() throws IOException, GeneralSecurityException, IotHubException, URISyntaxException
     {
         TestDeviceIdentity testDeviceIdentity = Tools.getTestDevice(iotHubConnectionString, IotHubClientProtocol.AMQPS, AuthenticationType.SAS, true);
