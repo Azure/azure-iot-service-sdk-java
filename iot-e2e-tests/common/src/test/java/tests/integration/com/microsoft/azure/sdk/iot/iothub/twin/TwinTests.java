@@ -470,9 +470,9 @@ public class TwinTests extends TwinCommon
         }
     }
 
-    //@Test
-    //@StandardTierHubOnlyTest
-    //@ContinuousIntegrationTest
+    @Test
+    @StandardTierHubOnlyTest
+    @ContinuousIntegrationTest
     public void subscribeToDesiredPropertiesOverwritesPreviousCallbacks() throws Exception
     {
         this.testInstance.setup();
