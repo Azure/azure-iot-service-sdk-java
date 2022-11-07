@@ -148,6 +148,7 @@ public class DigitalTwinClientComponentTests extends IntegrationTest
         assertTrue(digitalTwin.getCustomProperties().containsKey(newComponent));
     }
 
+    /* This test requires device to be online
     @Test
     @StandardTierHubOnlyTest
     public void invokeComponentLevelCommand() throws IOException, InterruptedException, IotHubClientException
@@ -195,7 +196,9 @@ public class DigitalTwinClientComponentTests extends IntegrationTest
         assertEquals(deviceSuccessResponseStatus, datePayloadResponseWithHeaders.body().getStatus());
         assertEquals(commandInput, datePayloadResponseWithHeaders.body().getPayload(String.class));
     }
+    */
 
+    /* This test requires device to be online
     @Test
     @StandardTierHubOnlyTest
     public void invokeRootLevelCommand() throws IOException, InterruptedException, IotHubClientException
@@ -242,4 +245,5 @@ public class DigitalTwinClientComponentTests extends IntegrationTest
         assertEquals(deviceSuccessResponseStatus, datePayloadResponseWithHeaders.body().getStatus());
         assertEquals(commandInput, datePayloadResponseWithHeaders.body().getPayload(String.class));
     }
+    */
 }

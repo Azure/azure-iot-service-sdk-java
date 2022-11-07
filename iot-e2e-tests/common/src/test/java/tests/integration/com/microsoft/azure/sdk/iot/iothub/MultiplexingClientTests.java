@@ -1055,6 +1055,7 @@ public class MultiplexingClientTests extends IntegrationTest
 
     // Fault every device session, wait for it to recover, test sending from it, and verify that no other device sessions were dropped
     // other than the deliberately dropped session.
+    @Ignore // Require device to run this test
     @Test
     @ErrInjTest
     @IotHubTest
@@ -1114,6 +1115,7 @@ public class MultiplexingClientTests extends IntegrationTest
     }
 
     // Fault every device session basically at once, make sure that the clients all recover
+    @Ignore // Require device to run this test
     @Test
     @ErrInjTest
     @IotHubTest
@@ -1165,6 +1167,7 @@ public class MultiplexingClientTests extends IntegrationTest
 
     // Open a multiplexed connection, send a fault injection message to drop the TCP connection, and ensure that the multiplexed
     // connection recovers and that no twin/method subscriptions were lost
+    @Ignore // Require device to run this test
     @Test
     @ErrInjTest
     @IotHubTest
@@ -1786,6 +1789,7 @@ public class MultiplexingClientTests extends IntegrationTest
     // If a multiplexed device is subscribed to twin and/or methods and/or cloud to device messages, then loses its
     // session due to network issues, it should still be subscribed to twin and/or methods and/or cloud to device messages
     // after it finishes reconnection
+    @Ignore // Require device to run this test
     @StandardTierHubOnlyTest
     @ContinuousIntegrationTest
     @ErrInjTest

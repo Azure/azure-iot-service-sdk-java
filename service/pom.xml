@@ -2,7 +2,7 @@
 <project>
     <parent>
         <groupId>com.microsoft.azure.sdk.iot</groupId>
-        <artifactId>iot-sdk-java</artifactId>
+        <artifactId>iot-service-sdk-java</artifactId>
         <version>0.26.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>

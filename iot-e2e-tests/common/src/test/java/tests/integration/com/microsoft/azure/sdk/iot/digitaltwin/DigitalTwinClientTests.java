@@ -170,82 +170,6 @@ public class DigitalTwinClientTests extends IntegrationTest
         assertEquals(responseWithHeaders.body().getMetadata().getModelId(), E2ETestConstants.THERMOSTAT_MODEL_ID);
     }
 
-    // Open a multiplexed connection with two devices, each with a different model Id. Verify that their reported twin has
-    // the expected model Ids.
-    @Test
-    @StandardTierHubOnlyTest
-    public void getMultiplexedDigitalTwinsRegisteredBeforeOpen() throws IotHubException, IOException, URISyntaxException, InterruptedException, IotHubClientException, TimeoutException
-    {
-        if (protocol == MQTT || protocol == MQTT_WS) {
-            return; // multiplexing isn't supported over MQTT, so it can't be tested
-        }
-
-        MultiplexingClient multiplexingClient = new MultiplexingClient(deviceClient.getConfig().getIotHubHostname(), protocol);
-        List<DeviceClient> multiplexedDeviceClients = new ArrayList<>();
-        multiplexedDeviceClients.add(createDeviceClient(protocol, E2ETestConstants.THERMOSTAT_MODEL_ID));
-        multiplexedDeviceClients.add(createDeviceClient(protocol, E2ETestConstants.TEMPERATURE_CONTROLLER_MODEL_ID));
-
-        // register the devices before the multiplexing client has been opened
-        multiplexingClient.registerDeviceClients(multiplexedDeviceClients);
-
-        multiplexingClient.open(false);
-
-        // act
-        String thermostatDeviceId = multiplexedDeviceClients.get(0).getConfig().getDeviceId();
-        BasicDigitalTwin thermostatResponse = digitalTwinClient.getDigitalTwin(thermostatDeviceId, BasicDigitalTwin.class);
-        ServiceResponseWithHeaders<BasicDigitalTwin, DigitalTwinGetHeaders> thermostatResponseWithHeaders =
-            digitalTwinClient.getDigitalTwinWithResponse(thermostatDeviceId, BasicDigitalTwin.class);
-
-        String temperatureControllerDeviceId = multiplexedDeviceClients.get(1).getConfig().getDeviceId();
-        BasicDigitalTwin temperatureControllerResponse = digitalTwinClient.getDigitalTwin(temperatureControllerDeviceId, BasicDigitalTwin.class);
-        ServiceResponseWithHeaders<BasicDigitalTwin, DigitalTwinGetHeaders> temperatureControllerResponseWithHeaders =
-            digitalTwinClient.getDigitalTwinWithResponse(temperatureControllerDeviceId, BasicDigitalTwin.class);
-
-        // assert
-        assertEquals(thermostatResponse.getMetadata().getModelId(), E2ETestConstants.THERMOSTAT_MODEL_ID);
-        assertEquals(thermostatResponseWithHeaders.body().getMetadata().getModelId(), E2ETestConstants.THERMOSTAT_MODEL_ID);
-        assertEquals(temperatureControllerResponse.getMetadata().getModelId(), E2ETestConstants.TEMPERATURE_CONTROLLER_MODEL_ID);
-        assertEquals(temperatureControllerResponseWithHeaders.body().getMetadata().getModelId(), E2ETestConstants.TEMPERATURE_CONTROLLER_MODEL_ID);
-    }
-
-    // Open a multiplexed connection with no devices, then register two devices, each with a different model Id.
-    // Verify that their reported twin has the expected model Ids.
-    @Test
-    @StandardTierHubOnlyTest
-    public void getMultiplexedDigitalTwinsRegisteredAfterOpen() throws IotHubException, IOException, URISyntaxException, InterruptedException, IotHubClientException, TimeoutException
-    {
-        if (protocol == MQTT || protocol == MQTT_WS) {
-            return; // multiplexing isn't supported over MQTT, so it can't be tested
-        }
-
-        MultiplexingClient multiplexingClient = new MultiplexingClient(deviceClient.getConfig().getIotHubHostname(), protocol);
-        List<DeviceClient> multiplexedDeviceClients = new ArrayList<>();
-        multiplexedDeviceClients.add(createDeviceClient(protocol, E2ETestConstants.THERMOSTAT_MODEL_ID));
-        multiplexedDeviceClients.add(createDeviceClient(protocol, E2ETestConstants.TEMPERATURE_CONTROLLER_MODEL_ID));
-
-        multiplexingClient.open(false);
-
-        // register the devices after the multiplexing client has been opened
-        multiplexingClient.registerDeviceClients(multiplexedDeviceClients);
-
-        // act
-        String thermostatDeviceId = multiplexedDeviceClients.get(0).getConfig().getDeviceId();
-        BasicDigitalTwin thermostatResponse = digitalTwinClient.getDigitalTwin(thermostatDeviceId, BasicDigitalTwin.class);
-        ServiceResponseWithHeaders<BasicDigitalTwin, DigitalTwinGetHeaders> thermostatResponseWithHeaders =
-            digitalTwinClient.getDigitalTwinWithResponse(thermostatDeviceId, BasicDigitalTwin.class);
-
-        String temperatureControllerDeviceId = multiplexedDeviceClients.get(1).getConfig().getDeviceId();
-        BasicDigitalTwin temperatureControllerResponse = digitalTwinClient.getDigitalTwin(temperatureControllerDeviceId, BasicDigitalTwin.class);
-        ServiceResponseWithHeaders<BasicDigitalTwin, DigitalTwinGetHeaders> temperatureControllerResponseWithHeaders =
-            digitalTwinClient.getDigitalTwinWithResponse(temperatureControllerDeviceId, BasicDigitalTwin.class);
-
-        // assert
-        assertEquals(thermostatResponse.getMetadata().getModelId(), E2ETestConstants.THERMOSTAT_MODEL_ID);
-        assertEquals(thermostatResponseWithHeaders.body().getMetadata().getModelId(), E2ETestConstants.THERMOSTAT_MODEL_ID);
-        assertEquals(temperatureControllerResponse.getMetadata().getModelId(), E2ETestConstants.TEMPERATURE_CONTROLLER_MODEL_ID);
-        assertEquals(temperatureControllerResponseWithHeaders.body().getMetadata().getModelId(), E2ETestConstants.TEMPERATURE_CONTROLLER_MODEL_ID);
-    }
-
     @Test
     @StandardTierHubOnlyTest
     public void getDigitalTwinWithProxy() {
@@ -367,51 +291,7 @@ public class DigitalTwinClientTests extends IntegrationTest
         digitalTwinClient.getDigitalTwin(deviceId, BasicDigitalTwin.class);
     }
 
-    @Test
-    @StandardTierHubOnlyTest
-    public void updateDigitalTwin() throws IOException, TimeoutException, InterruptedException, IotHubClientException
-    {
-        // arrange
-
-        String newProperty = "currentTemperature";
-        String newPropertyPath = "/currentTemperature";
-        Integer newPropertyValue = 35;
-
-        // start device twin and setup handler for property updates in device
-        deviceClient.subscribeToDesiredProperties((twin, context)
-            -> deviceClient.updateReportedPropertiesAsync(twin.getDesiredProperties(), (ReportedPropertiesCallback) null, null), null);
-
-        DigitalTwinUpdateRequestOptions optionsWithoutEtag = new DigitalTwinUpdateRequestOptions();
-        optionsWithoutEtag.setIfMatch("*");
-
-        // get digital twin and Etag before update
-        ServiceResponseWithHeaders<BasicDigitalTwin, DigitalTwinGetHeaders> responseWithHeaders =
-            digitalTwinClient.getDigitalTwinWithResponse(deviceId, BasicDigitalTwin.class);
-        DigitalTwinUpdateRequestOptions optionsWithEtag = new DigitalTwinUpdateRequestOptions();
-        optionsWithEtag.setIfMatch(responseWithHeaders.headers().eTag());
-
-        // act
-        // Add properties at root level - conditional update with max overload
-        UpdateOperationUtility updateOperationUtility = new UpdateOperationUtility().appendAddPropertyOperation(newPropertyPath, newPropertyValue);
-        digitalTwinClient.updateDigitalTwinWithResponse(deviceId, updateOperationUtility.getUpdateOperations(), optionsWithEtag);
-
-        long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime <= TWIN_PROPAGATION_TIMEOUT_MILLIS)
-        {
-            BasicDigitalTwin digitalTwin = digitalTwinClient.getDigitalTwinWithResponse(deviceId, BasicDigitalTwin.class).body();
-
-            // assert
-            if (E2ETestConstants.THERMOSTAT_MODEL_ID.equals(digitalTwin.getMetadata().getModelId())
-                && digitalTwin.getMetadata().getWriteableProperties().containsKey(newProperty)
-                && newPropertyValue.equals(digitalTwin.getMetadata().getWriteableProperties().get(newProperty).getDesiredValue()))
-            {
-                return; // conditions met, exit test successfully
-            }
-        }
-
-        fail("Timed out waiting for the model id to be present in the twin service");
-    }
-
+    /* This test requires device to be online
     @Test
     @StandardTierHubOnlyTest
     public void invokeRootLevelCommand() throws IOException, InterruptedException, IotHubClientException
@@ -458,6 +338,7 @@ public class DigitalTwinClientTests extends IntegrationTest
         assertEquals(deviceSuccessResponseStatus, datePayloadResponseWithHeaders.body().getStatus());
         assertEquals(commandInput, datePayloadResponseWithHeaders.body().getPayload(String.class));
     }
+    */
 
     private static DigitalTwinClient buildDigitalTwinClientWithAzureSasCredential()
     {

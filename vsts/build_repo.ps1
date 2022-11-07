@@ -17,21 +17,14 @@ else
 if (($env:JAVA_VERSION).equals("8"))
 {
     $env:JAVA_HOME=$env:JAVA_HOME_8_X64
-
-    if ($isPullRequestBuild.equals("true"))
-    {
-        Write-Host "Skipping e2e tests since only Java 11 runs e2e tests during a pull request build"
-        mvn install -T 2C -DskipIntegrationTests=true
-    }
-    else
-    {
-        mvn -DRUN_PROVISIONING_TESTS="$Env:runProvisioningTests" -DRUN_DIGITAL_TESTS="$Env:runDigitalTwinTests" -DRUN_IOTHUB_TESTS="$Env:runIotHubTests" -DIS_PULL_REQUEST="$isPullRequestBuild" install -T 2C
-    }
+    mvn -DIS_PULL_REQUEST="$isPullRequestBuild" install -T 2C
+    #mvn install -T 2C -DskipIntegrationTests=true
 }
 elseif (($env:JAVA_VERSION).equals("11"))
 {
     $env:JAVA_HOME=$env:JAVA_HOME_11_X64
-    mvn -DRUN_PROVISIONING_TESTS="$Env:runProvisioningTests" -DRUN_DIGITAL_TESTS="$Env:runDigitalTwinTests" -DRUN_IOTHUB_TESTS="$Env:runIotHubTests" -DIS_PULL_REQUEST="$isPullRequestBuild" install -T 2C -DskipUnitTests=true
+    mvn -DIS_PULL_REQUEST="$isPullRequestBuild" install -T 2C -DskipUnitTests=true
+    #mvn install -T 2C -DskipIntegrationTests=true -DskipUnitTests=true
 }
 # Leaving this commented out to make it easy to add Java 17 support later
 #elseif (($env:JAVA_VERSION).equals("17"))
