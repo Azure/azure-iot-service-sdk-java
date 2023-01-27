@@ -31,15 +31,6 @@ their devices starting June 2022.**
 
 If you have any questions, comments, or concerns about this upcoming change, please let us know on our [discussions page](https://github.com/Azure/azure-iot-sdk-java/discussions).
 
-## Build status
-
-Due to security considerations, build logs are not publicly available.
-
-| Service Environment      | Status |
-| ---                      | ---    |
-| Main                     | [![Build Status](https://azure-iot-sdks.visualstudio.com/azure-iot-sdks/_apis/build/status/java/pull_request_validation/Java%20Prod?branchName=main)](https://azure-iot-sdks.visualstudio.com/azure-iot-sdks/_build/latest?definitionId=252&branchName=main)|
-| Preview                  | [![Build Status](https://azure-iot-sdks.visualstudio.com/azure-iot-sdks/_apis/build/status/java/pull_request_validation/Java%20Canary?branchName=preview)](https://azure-iot-sdks.visualstudio.com/azure-iot-sdks/_build/latest?definitionId=245&branchName=preview)|
-
 This repository contains the following:
 * **Azure IoT Hub service SDK for Java**: enables developing back-end applications for Azure IoT
 
