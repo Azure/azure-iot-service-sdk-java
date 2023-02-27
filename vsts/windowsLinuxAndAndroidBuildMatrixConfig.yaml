@@ -24,7 +24,7 @@ jobs:
         JDK 8: # only run Java 8 in nightly or CI builds.
           JAVA_VERSION: 8
     pool:
-      vmImage: windows-latest
+      vmImage: 'windows-2019'
     displayName: Windows
     steps:
       - powershell: ./vsts/echo_versions.ps1
@@ -198,7 +198,7 @@ jobs:
   - job: AndroidBuild
     timeoutInMinutes: 30
     pool:
-      vmImage: windows-latest
+      vmImage: 'windows-2019'
     displayName: Android Build
 
     steps:
