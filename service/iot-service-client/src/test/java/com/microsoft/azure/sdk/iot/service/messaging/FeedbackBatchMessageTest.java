@@ -5,9 +5,6 @@
 
 package com.microsoft.azure.sdk.iot.service.messaging;
 
-import com.microsoft.azure.sdk.iot.service.messaging.FeedbackBatch;
-import com.microsoft.azure.sdk.iot.service.messaging.FeedbackBatchMessage;
-import com.microsoft.azure.sdk.iot.service.messaging.FeedbackStatusCode;
 import mockit.integration.junit4.JMockit;
 import org.junit.Test;
 import org.junit.runner.RunWith;

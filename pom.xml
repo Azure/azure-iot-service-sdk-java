@@ -72,22 +72,22 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.13.4.1</version> <!-- Nested dependency from azure core. Overriding the version to use newer version-->
+                <version>2.14.0-rc1</version> <!-- Nested dependency from azure core. Overriding the version to use newer version-->
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-joda</artifactId>
-                <version>2.13.2</version> <!-- Nested dependency from azure core. Overriding the version to use newer version-->
+                <version>2.14.0-rc1</version> <!-- Nested dependency from azure core. Overriding the version to use newer version-->
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>2.13.2</version> <!-- Nested dependency from azure core. Overriding the version to use newer version-->
+                <version>2.14.0-rc1</version> <!-- Nested dependency from azure core. Overriding the version to use newer version-->
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>2.13.2</version>
+                <version>2.14.0-rc1</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
@@ -178,9 +178,9 @@
         <dice-provider-artifact-id>dice-provider</dice-provider-artifact-id>
         <x509-provider-artifact-id>x509-provider</x509-provider-artifact-id>
 
-        <iot-device-client-version>2.0.5</iot-device-client-version>
-        <iot-service-client-version>2.1.0</iot-service-client-version>
-        <provisioning-device-client-version>2.0.1</provisioning-device-client-version>
+        <iot-device-client-version>2.1.2</iot-device-client-version>
+        <iot-service-client-version>2.1.4</iot-service-client-version>
+        <provisioning-device-client-version>2.0.2</provisioning-device-client-version>
         <provisioning-service-client-version>2.0.1</provisioning-service-client-version>
         <security-provider-version>2.0.0</security-provider-version>
         <tpm-provider-emulator-version>2.0.0</tpm-provider-emulator-version>

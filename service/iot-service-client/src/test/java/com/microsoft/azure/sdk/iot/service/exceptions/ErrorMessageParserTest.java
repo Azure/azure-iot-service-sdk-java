@@ -3,7 +3,6 @@
 
 package com.microsoft.azure.sdk.iot.service.exceptions;
 
-import com.microsoft.azure.sdk.iot.service.exceptions.ErrorMessageParser;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

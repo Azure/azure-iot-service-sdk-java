@@ -4,12 +4,8 @@
 package tests.integration.com.microsoft.azure.sdk.iot.digitaltwin;
 
 import com.azure.core.credential.AzureSasCredential;
-import com.google.gson.JsonElement;
 import com.microsoft.azure.sdk.iot.device.*;
 import com.microsoft.azure.sdk.iot.device.exceptions.IotHubClientException;
-import com.microsoft.azure.sdk.iot.device.twin.DirectMethodResponse;
-import com.microsoft.azure.sdk.iot.device.twin.MethodCallback;
-import com.microsoft.azure.sdk.iot.device.twin.ReportedPropertiesCallback;
 import com.microsoft.azure.sdk.iot.service.ProxyOptions;
 import com.microsoft.azure.sdk.iot.service.auth.AuthenticationType;
 import com.microsoft.azure.sdk.iot.service.auth.IotHubConnectionString;
@@ -17,12 +13,7 @@ import com.microsoft.azure.sdk.iot.service.auth.IotHubConnectionStringBuilder;
 import com.microsoft.azure.sdk.iot.service.auth.IotHubServiceSasToken;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.DigitalTwinClient;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.DigitalTwinClientOptions;
-import com.microsoft.azure.sdk.iot.service.digitaltwin.UpdateOperationUtility;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.customized.DigitalTwinGetHeaders;
-import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinCommandResponse;
-import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinInvokeCommandHeaders;
-import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinInvokeCommandRequestOptions;
-import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinUpdateRequestOptions;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.serialization.BasicDigitalTwin;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
 import com.microsoft.azure.sdk.iot.service.registry.Device;
@@ -36,7 +27,6 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import tests.integration.com.microsoft.azure.sdk.iot.digitaltwin.helpers.E2ETestConstants;
-import tests.integration.com.microsoft.azure.sdk.iot.helpers.BasicProxyAuthenticator;
 import tests.integration.com.microsoft.azure.sdk.iot.helpers.IntegrationTest;
 import tests.integration.com.microsoft.azure.sdk.iot.helpers.SasTokenTools;
 import tests.integration.com.microsoft.azure.sdk.iot.helpers.Tools;
@@ -50,18 +40,11 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URISyntaxException;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static com.microsoft.azure.sdk.iot.device.IotHubClientProtocol.*;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @DigitalTwinTest
 @IotHubTest
@@ -290,55 +273,6 @@ public class DigitalTwinClientTests extends IntegrationTest
         // don't care about the return value, just checking that the request isn't unauthorized
         digitalTwinClient.getDigitalTwin(deviceId, BasicDigitalTwin.class);
     }
-
-    /* This test requires device to be online
-    @Test
-    @StandardTierHubOnlyTest
-    public void invokeRootLevelCommand() throws IOException, InterruptedException, IotHubClientException
-    {
-        // arrange
-        String commandName = "getMaxMinReport";
-        String commandInput = "\"" +ZonedDateTime.now(ZoneOffset.UTC).minusMinutes(5).format(DateTimeFormatter.ISO_DATE_TIME) + "\"";
-        String jsonStringInput = "{\"prop\":\"value\"}";
-        DigitalTwinInvokeCommandRequestOptions options = new DigitalTwinInvokeCommandRequestOptions();
-        options.setConnectTimeoutInSeconds(15);
-        options.setResponseTimeoutInSeconds(15);
-
-        // setup device callback
-        Integer deviceSuccessResponseStatus = 200;
-        Integer deviceFailureResponseStatus = 500;
-
-        // Device method callback
-        MethodCallback methodCallback = (methodName, methodData, context) -> {
-            JsonElement jsonRequest = methodData.getPayloadAsJsonElement();
-            if(methodName.equalsIgnoreCase(commandName)) {
-                return new DirectMethodResponse(deviceSuccessResponseStatus, jsonRequest);
-            }
-            else {
-                return new DirectMethodResponse(deviceFailureResponseStatus, jsonRequest);
-            }
-        };
-
-        // IotHub event callback
-        deviceClient.subscribeToMethods(methodCallback, commandName);
-
-        // act
-        DigitalTwinCommandResponse responseWithNoPayload = this.digitalTwinClient.invokeCommand(deviceId, commandName, null);
-        DigitalTwinCommandResponse responseWithJsonStringPayload = this.digitalTwinClient.invokeCommand(deviceId, commandName, jsonStringInput);
-        DigitalTwinCommandResponse responseWithDatePayload = this.digitalTwinClient.invokeCommand(deviceId, commandName, commandInput);
-        ServiceResponseWithHeaders<DigitalTwinCommandResponse, DigitalTwinInvokeCommandHeaders> datePayloadResponseWithHeaders = this.digitalTwinClient.invokeCommandWithResponse(deviceId, commandName, commandInput, options);
-
-        // assert
-        assertEquals(deviceSuccessResponseStatus, responseWithNoPayload.getStatus());
-        assertEquals("{}", responseWithNoPayload.getPayload(String.class));
-        assertEquals(deviceSuccessResponseStatus, responseWithJsonStringPayload.getStatus());
-        assertEquals(jsonStringInput, responseWithJsonStringPayload.getPayload(String.class));
-        assertEquals(deviceSuccessResponseStatus, responseWithDatePayload.getStatus());
-        assertEquals(commandInput, responseWithDatePayload.getPayload(String.class));
-        assertEquals(deviceSuccessResponseStatus, datePayloadResponseWithHeaders.body().getStatus());
-        assertEquals(commandInput, datePayloadResponseWithHeaders.body().getPayload(String.class));
-    }
-    */
 
     private static DigitalTwinClient buildDigitalTwinClientWithAzureSasCredential()
     {

@@ -5,9 +5,6 @@
 
 package com.microsoft.azure.sdk.iot.service.auth;
 
-import com.microsoft.azure.sdk.iot.service.auth.IotHubConnectionString;
-import com.microsoft.azure.sdk.iot.service.auth.IotHubConnectionStringBuilder;
-import com.microsoft.azure.sdk.iot.service.auth.ServiceAuthenticationWithSharedAccessPolicyKey;
 import mockit.Deencapsulation;
 import mockit.integration.junit4.JMockit;
 import org.junit.Test;
@@ -28,7 +25,7 @@ public class ServiceAuthenticationWithSharedAccessPolicyKeyTest
         String newPolicyName = "XXX";
         String newPolicyKey = "YYY";
         ServiceAuthenticationWithSharedAccessPolicyKey auth = new ServiceAuthenticationWithSharedAccessPolicyKey(newPolicyName, newPolicyKey);
-        // Act        
+        // Act
         Deencapsulation.invoke(auth, "populate", IotHubConnectionString.class);
     }
 

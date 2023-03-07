@@ -3,7 +3,6 @@
 
 package com.microsoft.azure.sdk.iot.service.registry.serializers;
 
-import com.microsoft.azure.sdk.iot.service.registry.serializers.DeviceCapabilitiesParser;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertNotNull;

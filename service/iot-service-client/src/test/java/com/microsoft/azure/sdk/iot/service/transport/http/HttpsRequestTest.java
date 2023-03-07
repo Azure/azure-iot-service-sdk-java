@@ -15,9 +15,6 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 /** Unit tests for HttpRequest. */
 @SuppressWarnings("EmptyMethod")
 @RunWith(JMockit.class)

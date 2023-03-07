@@ -3,10 +3,8 @@
 
 package tests.integration.com.microsoft.azure.sdk.iot.digitaltwin;
 
-import com.google.gson.*;
 import com.microsoft.azure.sdk.iot.device.*;
 import com.microsoft.azure.sdk.iot.device.exceptions.IotHubClientException;
-import com.microsoft.azure.sdk.iot.device.twin.*;
 import com.microsoft.azure.sdk.iot.service.registry.Device;
 import com.microsoft.azure.sdk.iot.service.registry.RegistryClient;
 import com.microsoft.azure.sdk.iot.service.auth.AuthenticationType;
@@ -31,12 +29,7 @@ import tests.integration.com.microsoft.azure.sdk.iot.helpers.annotations.Standar
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static com.microsoft.azure.sdk.iot.device.IotHubClientProtocol.*;
 import static java.util.Arrays.asList;
@@ -147,103 +140,4 @@ public class DigitalTwinClientComponentTests extends IntegrationTest
         assertEquals(E2ETestConstants.TEMPERATURE_CONTROLLER_MODEL_ID, digitalTwin.getMetadata().getModelId());
         assertTrue(digitalTwin.getCustomProperties().containsKey(newComponent));
     }
-
-    /* This test requires device to be online
-    @Test
-    @StandardTierHubOnlyTest
-    public void invokeComponentLevelCommand() throws IOException, InterruptedException, IotHubClientException
-    {
-        // arrange
-        String componentName = "thermostat1";
-        String commandName = "getMaxMinReport";
-        String commandInput = "\"" +ZonedDateTime.now(ZoneOffset.UTC).minusMinutes(5).format(DateTimeFormatter.ISO_DATE_TIME) + "\"";
-        String jsonStringInput = "{\"prop\":\"value\"}";
-        DigitalTwinInvokeCommandRequestOptions options = new DigitalTwinInvokeCommandRequestOptions();
-        options.setConnectTimeoutInSeconds(15);
-        options.setResponseTimeoutInSeconds(15);
-
-        // setup device callback
-        Integer deviceSuccessResponseStatus = 200;
-        Integer deviceFailureResponseStatus = 500;
-
-        // Device method callback
-        String componentCommandName = componentName + "*" + commandName;
-        MethodCallback methodCallback = (methodName, methodData, context) -> {
-            JsonElement jsonRequest = methodData.getPayloadAsJsonElement();
-            if(methodName.equalsIgnoreCase(componentCommandName)) {
-                return new DirectMethodResponse(deviceSuccessResponseStatus, jsonRequest);
-            }
-            else {
-                return new DirectMethodResponse(deviceFailureResponseStatus, jsonRequest);
-            }
-        };
-
-        deviceClient.subscribeToMethods(methodCallback, commandName);
-
-        // act
-        DigitalTwinCommandResponse responseWithNoPayload = this.digitalTwinClient.invokeComponentCommand(deviceId, componentName, commandName, null);
-        DigitalTwinCommandResponse responseWithJsonStringPayload = this.digitalTwinClient.invokeComponentCommand(deviceId, componentName, commandName, jsonStringInput);
-        DigitalTwinCommandResponse responseWithDatePayload = this.digitalTwinClient.invokeComponentCommand(deviceId, componentName, commandName, commandInput);
-        ServiceResponseWithHeaders<DigitalTwinCommandResponse, DigitalTwinInvokeCommandHeaders> datePayloadResponseWithHeaders = this.digitalTwinClient.invokeComponentCommandWithResponse(deviceId, componentName, commandName, commandInput, options);
-
-        // assert
-        assertEquals(deviceSuccessResponseStatus, responseWithNoPayload.getStatus());
-        assertEquals("{}", responseWithNoPayload.getPayload(String.class));
-        assertEquals(deviceSuccessResponseStatus, responseWithJsonStringPayload.getStatus());
-        assertEquals(jsonStringInput, responseWithJsonStringPayload.getPayload(String.class));
-        assertEquals(deviceSuccessResponseStatus, responseWithDatePayload.getStatus());
-        assertEquals(commandInput, responseWithDatePayload.getPayload(String.class));
-        assertEquals(deviceSuccessResponseStatus, datePayloadResponseWithHeaders.body().getStatus());
-        assertEquals(commandInput, datePayloadResponseWithHeaders.body().getPayload(String.class));
-    }
-    */
-
-    /* This test requires device to be online
-    @Test
-    @StandardTierHubOnlyTest
-    public void invokeRootLevelCommand() throws IOException, InterruptedException, IotHubClientException
-    {
-        // arrange
-        String commandName = "reboot";
-        String commandInput = "5";
-        String jsonStringInput = "{\"prop\":\"value\"}";
-        DigitalTwinInvokeCommandRequestOptions options = new DigitalTwinInvokeCommandRequestOptions();
-        options.setConnectTimeoutInSeconds(15);
-        options.setResponseTimeoutInSeconds(15);
-
-        // setup device callback
-        Integer deviceSuccessResponseStatus = 200;
-        Integer deviceFailureResponseStatus = 500;
-
-        // Device method callback
-        MethodCallback methodCallback = (methodName, methodData, context) -> {
-            JsonElement jsonRequest = methodData.getPayloadAsJsonElement();
-            if(methodName.equalsIgnoreCase(commandName)) {
-                return new DirectMethodResponse(deviceSuccessResponseStatus, jsonRequest);
-            }
-            else {
-                return new DirectMethodResponse(deviceFailureResponseStatus, jsonRequest);
-            }
-        };
-
-        // IotHub event callback
-        deviceClient.subscribeToMethods(methodCallback, commandName);
-
-        // act
-        DigitalTwinCommandResponse responseWithNoPayload = this.digitalTwinClient.invokeCommand(deviceId, commandName, null);
-        DigitalTwinCommandResponse responseWithJsonStringPayload = this.digitalTwinClient.invokeCommand(deviceId, commandName, jsonStringInput);
-        DigitalTwinCommandResponse responseWithDatePayload = this.digitalTwinClient.invokeCommand(deviceId, commandName, commandInput);
-        ServiceResponseWithHeaders<DigitalTwinCommandResponse, DigitalTwinInvokeCommandHeaders> datePayloadResponseWithHeaders = this.digitalTwinClient.invokeCommandWithResponse(deviceId, commandName, commandInput, options);
-
-        // assert
-        assertEquals(deviceSuccessResponseStatus, responseWithNoPayload.getStatus());
-        assertEquals("{}", responseWithNoPayload.getPayload(String.class));
-        assertEquals(deviceSuccessResponseStatus, responseWithJsonStringPayload.getStatus());
-        assertEquals(jsonStringInput, responseWithJsonStringPayload.getPayload(String.class));
-        assertEquals(deviceSuccessResponseStatus, responseWithDatePayload.getStatus());
-        assertEquals(commandInput, responseWithDatePayload.getPayload(String.class));
-        assertEquals(deviceSuccessResponseStatus, datePayloadResponseWithHeaders.body().getStatus());
-        assertEquals(commandInput, datePayloadResponseWithHeaders.body().getPayload(String.class));
-    }
-    */
 }
