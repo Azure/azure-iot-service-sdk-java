@@ -17,12 +17,9 @@ import com.microsoft.azure.sdk.iot.service.methods.DirectMethodResponse;
 import mockit.*;
 import org.junit.Test;
 
-
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**

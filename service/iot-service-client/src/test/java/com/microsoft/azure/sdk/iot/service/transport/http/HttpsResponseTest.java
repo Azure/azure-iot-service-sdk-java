@@ -5,7 +5,6 @@
 
 package com.microsoft.azure.sdk.iot.service.transport.http;
 
-import com.microsoft.azure.sdk.iot.service.transport.http.HttpResponse;
 import mockit.integration.junit4.JMockit;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -4,10 +4,8 @@
 package com.microsoft.azure.sdk.iot.service;
 
 import com.google.gson.JsonElement;
-import com.microsoft.azure.sdk.iot.service.ParserUtility;
 import mockit.Deencapsulation;
 import org.junit.Test;
-import com.microsoft.azure.sdk.iot.service.Helpers;
 
 import java.util.Date;
 import java.util.HashMap;

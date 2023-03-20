@@ -5,7 +5,6 @@
 
 package com.microsoft.azure.sdk.iot.service.messaging;
 
-import com.microsoft.azure.sdk.iot.service.messaging.FileUploadNotification;
 import org.junit.Test;
 
 import java.io.IOException;

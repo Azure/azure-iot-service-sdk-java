@@ -3,7 +3,6 @@
 
 package com.microsoft.azure.sdk.iot.service.registry.serializers;
 
-import com.microsoft.azure.sdk.iot.service.registry.serializers.SymmetricKeyParser;
 import mockit.Deencapsulation;
 import org.junit.Test;
 

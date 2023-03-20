@@ -6,7 +6,6 @@ package com.microsoft.azure.sdk.iot.service.auth;
 import com.azure.core.credential.AccessToken;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.credential.TokenRequestContext;
-import com.microsoft.azure.sdk.iot.service.auth.TokenCredentialCache;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.Test;

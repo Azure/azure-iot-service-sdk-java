@@ -5,8 +5,6 @@
 
 package com.microsoft.azure.sdk.iot.service.auth;
 
-import com.microsoft.azure.sdk.iot.service.auth.IotHubConnectionString;
-import com.microsoft.azure.sdk.iot.service.auth.IotHubConnectionStringBuilder;
 import mockit.Deencapsulation;
 import mockit.integration.junit4.JMockit;
 import org.junit.Test;
@@ -40,7 +38,7 @@ public class IotHubConnectionStringTest
         final String sharedAccessKey = "1234567890abcdefghijklmnopqrstvwxyz=";
         final String connectionString = "HostName=" + hostName + ";SharedAccessKeyName=" + sharedAccessKeyName + ";" + policyName + "=" + sharedAccessKey;
         final IotHubConnectionString iotHubConnectionString = IotHubConnectionStringBuilder.createIotHubConnectionString(connectionString);
-        
+
         // act
         iotHubConnectionString.getUrlDevice(deviceId);
     }
@@ -59,7 +57,7 @@ public class IotHubConnectionStringTest
         final String sharedAccessKey = "1234567890abcdefghijklmnopqrstvwxyz=";
         final String connectionString = "HostName=" + hostName + ";SharedAccessKeyName=" + sharedAccessKeyName + ";" + policyName + "=" + sharedAccessKey;
         final IotHubConnectionString iotHubConnectionString = IotHubConnectionStringBuilder.createIotHubConnectionString(connectionString);
-        
+
         // act
         iotHubConnectionString.getUrlDevice(deviceId);
     }
@@ -78,10 +76,10 @@ public class IotHubConnectionStringTest
         final String connectionString = "HostName=" + hostName + ";SharedAccessKeyName=" + sharedAccessKeyName + ";" + policyName + "=" + sharedAccessKey;
         final IotHubConnectionString iotHubConnectionString = IotHubConnectionStringBuilder.createIotHubConnectionString(connectionString);
         final String expected = "https://HOSTNAME.b.c.d/devices/xxx-device?"+URL_API_VERSION;
-        
+
         // act
         String actual = iotHubConnectionString.getUrlDevice(deviceId).toString();
-        
+
         // assert
         assertEquals("Device URL mismatch!", expected, actual);
     }
@@ -100,7 +98,7 @@ public class IotHubConnectionStringTest
         final String sharedAccessKey = "1234567890abcdefghijklmnopqrstvwxyz=";
         final String connectionString = "HostName=" + hostName + ";SharedAccessKeyName=" + sharedAccessKeyName + ";" + policyName + "=" + sharedAccessKey;
         final IotHubConnectionString iotHubConnectionString = IotHubConnectionStringBuilder.createIotHubConnectionString(connectionString);
-        
+
         // act
         iotHubConnectionString.getUrlDeviceList(maxCount);
     }
@@ -119,7 +117,7 @@ public class IotHubConnectionStringTest
         final String sharedAccessKey = "1234567890abcdefghijklmnopqrstvwxyz=";
         final String connectionString = "HostName=" + hostName + ";SharedAccessKeyName=" + sharedAccessKeyName + ";" + policyName + "=" + sharedAccessKey;
         final IotHubConnectionString iotHubConnectionString = IotHubConnectionStringBuilder.createIotHubConnectionString(connectionString);
-        
+
         // act
         iotHubConnectionString.getUrlDeviceList(maxCount);
     }
@@ -138,10 +136,10 @@ public class IotHubConnectionStringTest
         final String connectionString = "HostName=" + hostName + ";SharedAccessKeyName=" + sharedAccessKeyName + ";" + policyName + "=" + sharedAccessKey;
         final IotHubConnectionString iotHubConnectionString = IotHubConnectionStringBuilder.createIotHubConnectionString(connectionString);
         final String expected = "https://HOSTNAME.b.c.d/devices/?top=10&" + URL_API_VERSION;
-        
+
         // act
         String actual = iotHubConnectionString.getUrlDeviceList(maxCount).toString();
-        
+
         // assert
         assertEquals("DeviceList URL mismatch!", expected, actual);
     }
@@ -159,10 +157,10 @@ public class IotHubConnectionStringTest
         final String connectionString = "HostName=" + hostName + ";SharedAccessKeyName=" + sharedAccessKeyName + ";" + policyName + "=" + sharedAccessKey;
         final IotHubConnectionString iotHubConnectionString = IotHubConnectionStringBuilder.createIotHubConnectionString(connectionString);
         final String expected = "https://HOSTNAME.b.c.d/statistics/devices?" + URL_API_VERSION;
-        
+
         // act
         String actual = iotHubConnectionString.getUrlDeviceStatistics().toString();
-        
+
         // assert
         assertEquals("Device Statistics mismatch!", expected, actual);
     }
@@ -180,10 +178,10 @@ public class IotHubConnectionStringTest
         final String connectionString = "HostName=" + hostName + ";SharedAccessKeyName=" + sharedAccessKeyName + ";" + policyName + "=" + sharedAccessKey;
         final IotHubConnectionString iotHubConnectionString = IotHubConnectionStringBuilder.createIotHubConnectionString(connectionString);
         final String expected = "HostName=HOSTNAME.b.c.d;SharedAccessKeyName=ACCESSKEYNAME;SharedAccessKey=1234567890abcdefghijklmnopqrstvwxyz=;SharedAccessSignature=";
-        
+
         // act
         String actual = iotHubConnectionString.toString();
-        
+
         // assert
         assertEquals("Serialization error!", expected, actual);
     }

@@ -11,9 +11,6 @@ import com.microsoft.azure.sdk.iot.service.transport.amqps.CloudToDeviceMessageC
 import mockit.*;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
 public class MessagingClientTest
 {
     @Mocked

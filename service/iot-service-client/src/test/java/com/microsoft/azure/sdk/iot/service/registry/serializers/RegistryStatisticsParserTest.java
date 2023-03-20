@@ -3,7 +3,6 @@
 
 package com.microsoft.azure.sdk.iot.service.registry.serializers;
 
-import com.microsoft.azure.sdk.iot.service.registry.serializers.RegistryStatisticsParser;
 import mockit.Deencapsulation;
 import org.junit.Test;
 

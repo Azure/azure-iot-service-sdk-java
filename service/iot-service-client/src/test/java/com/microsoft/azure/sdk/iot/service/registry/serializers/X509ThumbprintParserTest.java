@@ -3,7 +3,6 @@
 
 package com.microsoft.azure.sdk.iot.service.registry.serializers;
 
-import com.microsoft.azure.sdk.iot.service.registry.serializers.X509ThumbprintParser;
 import mockit.Deencapsulation;
 import org.junit.Test;
 
