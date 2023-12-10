@@ -20,6 +20,7 @@
     <modules>
         <module>device-manager-sample</module>
         <module>file-upload-notification-processor-client-sample</module>
+        <module>device-deletion-sample</module>
         <module>device-twin-sample</module>
         <module>direct-method-sample</module>
         <module>job-client-sample</module>
