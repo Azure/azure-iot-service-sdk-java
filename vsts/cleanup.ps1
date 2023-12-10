@@ -5,7 +5,7 @@ if ($env:IOTHUB_CONNECTION_STRING.length -eq 0)
 }
 
 #Install the Java SDK
-mvn install -DskipIntegrationTests=true -DskipTests=true -T 2C
+mvn install -DskipIntegrationTests=true -DskipTests=true -DskipUnitTests=true -T 2C
 
 #move to sample folder where you can run the sample that deletes all devices tied to a hub
 cd service/iot-service-samples/device-deletion-sample/target
