@@ -28,7 +28,7 @@ jobs:
         displayName: 'Run Cleanup script'
         env:
           COMMIT_FROM: $(COMMIT_FROM)
-          IOTHUB_CONNECTION_STRING: $(IOTHUB-CONNECTION-STRING)
+          IOTHUB_CONNECTION_STRING: $(WINDOWS-IOTHUB-CONNECTION-STRING)
         condition: always()
 
       # In case the previous run failed due to a maven compilation issue
@@ -36,5 +36,5 @@ jobs:
         displayName: 'Run Cleanup script'
         env:
           COMMIT_FROM: $(COMMIT_FROM)
-          IOTHUB_CONNECTION_STRING: $(IOTHUB-CONNECTION-STRING)
+          IOTHUB_CONNECTION_STRING: $(WINDOWS-IOTHUB-CONNECTION-STRING)
         condition: always()
