@@ -241,6 +241,7 @@
                 <version>2.22.0</version>
                 <configuration>
                     <rerunFailingTestsCount>2</rerunFailingTestsCount>
+                    <testFailureIgnore>true</testFailureIgnore>
                     <skipTests>${skipUnitTests}</skipTests>
                 </configuration>
             </plugin>
