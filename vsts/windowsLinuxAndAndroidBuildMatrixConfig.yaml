@@ -211,6 +211,8 @@ jobs:
 
       - powershell: ./vsts/build_e2e_tests.ps1
         displayName: 'E2E Tests Build'
+        env:
+          IOTHUB_CONNECTION_STRING: $(ANDROID-IOTHUB-CONNECTION-STRING)
         condition: always()
 
       - powershell: ./vsts/gradle_build.ps1
