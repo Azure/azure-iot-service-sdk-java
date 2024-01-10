@@ -14,13 +14,13 @@ steps:
    ./vsts/release/package-maven-artifacts-for-release.ps1 $(System.DefaultWorkingDirectory)
   displayName: 'Package Maven Artifacts'
   env:
-    sources: $(Agent.ReleaseDirectory)/_azure-iot-service-sdk-java
-    output: $(Agent.ReleaseDirectory)/_azure-iot-service-sdk-java/_out
+    sources: $(Agent.BuildDirectory)/_azure-iot-service-sdk-java
+    output: $(Agent.BuildDirectory)/_azure-iot-service-sdk-java/_out
 
 - task: AzureFileCopy@2
   displayName: ' Copy Artifacts to Partner Release Pipeline Storage'
   inputs:
-    SourcePath: '$(Agent.ReleaseDirectory)/_azure-iot-service-sdk-java/_out'
+    SourcePath: '$(Agent.BuildDirectory)/_azure-iot-service-sdk-java/_out'
     azureSubscription: azuresdkpartnerdrops-sc
     Destination: AzureBlob
     storage: azuresdkpartnerdrops
