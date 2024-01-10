@@ -10,14 +10,6 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: PowerShell@2
-  inputs:
-    filePath: './_azure-iot-service-sdk-java/vsts/release/package-maven-artifacts-for-release.ps1'
-    arguments: '$(System.DefaultWorkingDirectory)'
-  env:
-    sources: $(Agent.ReleaseDirectory)/_azure-iot-service-sdk-java
-    output: $(Agent.ReleaseDirectory)/_azure-iot-service-sdk-java/_out
-
 - powershell: |
    ./vsts/release/package-maven-artifacts-for-release.ps1 $(System.DefaultWorkingDirectory)
   displayName: 'Package Maven Artifacts'
