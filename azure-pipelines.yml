@@ -10,6 +10,10 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- task: PowerShell@2
+  inputs:
+    filePath: './vsts/release/package-maven-artifacts-for-release.ps1'
+
 - powershell: |
    ./vsts/release/package-maven-artifacts-for-release.ps1 $(System.DefaultWorkingDirectory)
    
