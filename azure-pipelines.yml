@@ -22,7 +22,7 @@ steps:
   displayName: ' Copy Artifacts to Partner Release Pipeline Storage'
   inputs:
     SourcePath: '$(Agent.ReleaseDirectory)/_azure-iot-service-sdk-java/_out'
-    azureSubscription: azuresdkpartnerdrops
+    azureSubscription: azuresdkpartnerdrops-sc
     Destination: AzureBlob
     storage: azuresdkpartnerdrops
     ContainerName: 'drops/azure-iot-sdk/java'
