@@ -155,7 +155,7 @@ function ValidateInputParameter($parameter, $parameterName, $packageName, $path)
 }
 
 $Clients = @{ }
-ValidateInputParameter "True" "iotServiceClient" "iot-service-client" "iothub/service/iot-service-client"
+ValidateInputParameter "True" "iotServiceClient" "iot-service-client" "service/iot-service-client"
 
 Write-Host "`n`n`n`n"
 Write-Host "\/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/"
