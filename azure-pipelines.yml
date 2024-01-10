@@ -13,6 +13,7 @@ steps:
 - task: PowerShell@2
   inputs:
     filePath: './vsts/release/package-maven-artifacts-for-release.ps1'
+    arguments: '$(System.DefaultWorkingDirectory)'
 
 - powershell: |
    ./vsts/release/package-maven-artifacts-for-release.ps1 $(System.DefaultWorkingDirectory)
