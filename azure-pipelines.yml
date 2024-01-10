@@ -12,7 +12,7 @@ pool:
 steps:
 - task: PowerShell@2
   inputs:
-    filePath: './vsts/release/package-maven-artifacts-for-release.ps1'
+    filePath: './_azure-iot-service-sdk-java/vsts/release/package-maven-artifacts-for-release.ps1'
     arguments: '$(System.DefaultWorkingDirectory)'
   env:
     sources: $(Agent.ReleaseDirectory)/_azure-iot-service-sdk-java
