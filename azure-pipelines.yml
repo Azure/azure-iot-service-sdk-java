@@ -11,7 +11,7 @@ pool:
 
 steps:
 - powershell: |
-   . $(System.DefaultWorkingDirectory)/_azure-iot-service-sdk-java/vsts/release/package-maven-artifacts-for-release.ps1 $(System.DefaultWorkingDirectory)
+   ./vsts/release/package-maven-artifacts-for-release.ps1 $(System.DefaultWorkingDirectory)
    
   displayName: 'Package Maven Artifacts'
   env:
