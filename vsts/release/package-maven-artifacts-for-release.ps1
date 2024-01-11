@@ -37,6 +37,7 @@ function GetJobs($Sources, [Hashtable]$Clients) {
         $clientSource = Join-Path $Sources $Clients[$artifactId]
 
         if ($(Test-Path $clientSource -PathType Container) -eq $false) {
+            Get-Location
             throw "Folder not found: $($clientSource)"
         }
 
@@ -83,6 +84,7 @@ function PackageArtifacts($Sources, $Tools, $Output) {
     New-Item $Output -ItemType Directory # output folder should be new on the agent
 
     $location = Get-Location
+    Get-Location
     $jobs = GetJobs $Sources $Clients
 
     try {
