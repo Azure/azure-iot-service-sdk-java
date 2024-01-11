@@ -33,7 +33,8 @@ function GetJobs($Sources, [Hashtable]$Clients) {
     $jobs = @()
 
     foreach ($artifactId in $Clients.Keys) {
-
+        Write-Host "Sources: $($Sources)"
+        Write-Host "Clients: $($Clients[$artifactId])"
         $clientSource = Join-Path $Sources $Clients[$artifactId]
 
         if ($(Test-Path $clientSource -PathType Container) -eq $false) {
