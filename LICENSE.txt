@@ -1,4 +1,4 @@
-Microsoft Azure IoT SDK for Java
+Microsoft Azure IoT Service SDK for Java
 Copyright (c) Microsoft Corporation
 All rights reserved. 
 MIT License
