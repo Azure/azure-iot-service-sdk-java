@@ -33,12 +33,10 @@ function GetJobs($Sources, [Hashtable]$Clients) {
     $jobs = @()
 
     foreach ($artifactId in $Clients.Keys) {
-        Write-Host "Sources: $($Sources)"
-        Write-Host "Clients: $($Clients[$artifactId])"
+
         $clientSource = Join-Path $Sources $Clients[$artifactId]
 
         if ($(Test-Path $clientSource -PathType Container) -eq $false) {
-            Get-Location
             throw "Folder not found: $($clientSource)"
         }
 
@@ -85,14 +83,13 @@ function PackageArtifacts($Sources, $Tools, $Output) {
     New-Item $Output -ItemType Directory # output folder should be new on the agent
 
     $location = Get-Location
-    Get-Location
     $jobs = GetJobs $Sources $Clients
 
     try {
 
         Set-Location $Sources
 
-        mvn clean install -DskipTests -T 2C  --batch-mode -q # Attempt to build
+        mvn clean install -DskipIntegrationTests=true -DskipTests=true -DskipUnitTests=true -T 2C --batch-mode -q # Attempt to build
         TestLastExitCode
 
         foreach ($job in $jobs) {
