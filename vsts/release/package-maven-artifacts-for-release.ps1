@@ -35,7 +35,6 @@ function GetJobs($Sources, [Hashtable]$Clients) {
     foreach ($artifactId in $Clients.Keys) {
         Write-Host "Sources: $($Sources)"
         Write-Host "Clients: $($Clients[$artifactId])"
-
         $clientSource = Join-Path $Sources $Clients[$artifactId]
 
         if ($(Test-Path $clientSource -PathType Container) -eq $false) {
@@ -174,6 +173,5 @@ Write-Host "/\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\"
 Write-Host "`n`n`n`n"
 
 $outputFolder = $env:output + "/" + $date
-$testSource = Get-Location
 
-PackageArtifacts -Sources $testSource -Tools "$defaultWorkingDirectory/_azure-iot-service-sdk-java" -Output $outputFolder
+PackageArtifacts -Sources $env:sources -Tools "$defaultWorkingDirectory/_azure-iot-service-sdk-java" -Output $outputFolder
