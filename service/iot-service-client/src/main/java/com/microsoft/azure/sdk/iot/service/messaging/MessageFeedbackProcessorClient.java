@@ -245,10 +245,7 @@ public class MessageFeedbackProcessorClient
 
         log.debug("Opening MessageFeedbackProcessorClient");
 
-        this.reactorRunner = new ReactorRunner(
-            this.hostName,
-            "MessageFeedbackProcessor",
-            this.eventReceivingConnectionHandler);
+        this.reactorRunner = new ReactorRunner(this.eventReceivingConnectionHandler);
 
         final CountDownLatch openLatch = new CountDownLatch(1);
         this.eventReceivingConnectionHandler.setOnConnectionOpenedCallback(openLatch::countDown);
