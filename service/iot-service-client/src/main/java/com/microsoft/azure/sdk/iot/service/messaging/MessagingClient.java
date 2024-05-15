@@ -15,6 +15,7 @@ import com.microsoft.azure.sdk.iot.service.transport.amqps.CloudToDeviceMessageC
 import com.microsoft.azure.sdk.iot.service.transport.amqps.ReactorRunner;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
@@ -36,7 +37,7 @@ import java.util.function.Consumer;
  * </p>
  */
 @Slf4j
-public final class MessagingClient
+public final class MessagingClient implements AutoCloseable
 {
     private static final int START_REACTOR_TIMEOUT_MILLISECONDS = 60 * 1000; // 60 seconds
     private static final int STOP_REACTOR_TIMEOUT_MILLISECONDS = 5 * 1000; // 5 seconds
@@ -320,6 +321,7 @@ public final class MessagingClient
      * @throws InterruptedException if this function is interrupted while waiting for the connection to close down all
      * network resources.
      */
+    @Override
     public synchronized void close() throws InterruptedException
     {
         this.close(STOP_REACTOR_TIMEOUT_MILLISECONDS);

@@ -5,7 +5,6 @@
 
 package com.microsoft.azure.sdk.iot.service.messaging;
 
-import com.microsoft.azure.sdk.iot.service.auth.IotHubConnectionString;
 import com.microsoft.azure.sdk.iot.service.auth.IotHubServiceSasToken;
 import com.microsoft.azure.sdk.iot.service.transport.amqps.CloudToDeviceMessageConnectionHandler;
 import mockit.*;
@@ -24,10 +23,9 @@ public class MessagingClientTest
     public void createFromConnectionString_input_null() throws Exception
     {
         // Arrange
-        String connectionString = null;
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
         // Act
-        new MessagingClient(connectionString, iotHubServiceClientProtocol);
+        try(MessagingClient ignored = new MessagingClient(null, iotHubServiceClientProtocol)) {}
     }
 
     // Tests_SRS_SERVICE_SDK_JAVA_SERVICECLIENT_12_001: [The constructor shall throw IllegalArgumentException if the input string is empty or null]
@@ -39,7 +37,7 @@ public class MessagingClientTest
         String connectionString = "";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
         // Act
-        new MessagingClient(connectionString, iotHubServiceClientProtocol);
+        try(MessagingClient ignored = new MessagingClient(connectionString, iotHubServiceClientProtocol)) {}
     }
 
     // Tests_SRS_SERVICE_SDK_JAVA_SERVICECLIENT_12_004: [The constructor shall throw IllegalArgumentException if the input object is null]
@@ -48,9 +46,8 @@ public class MessagingClientTest
     public void constructor_input_null() throws Exception
     {
         // Arrange
-        IotHubConnectionString iotHubConnectionString = null;
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
         // Act
-        MessagingClient messagingClient = Deencapsulation.newInstance(MessagingClient.class, iotHubConnectionString, iotHubServiceClientProtocol);
+        try(MessagingClient ignored = Deencapsulation.newInstance(MessagingClient.class, null, iotHubServiceClientProtocol)) {}
     }
 }
