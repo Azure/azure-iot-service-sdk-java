@@ -15,7 +15,6 @@ import com.microsoft.azure.sdk.iot.service.transport.amqps.CloudToDeviceMessageC
 import com.microsoft.azure.sdk.iot.service.transport.amqps.ReactorRunner;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
