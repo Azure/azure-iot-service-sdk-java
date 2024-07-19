@@ -355,3 +355,7 @@ MigrationBackup/
 !iothub-service-client.properties
 !provisioning-device-client.properties
 !provisioning-service-client.properties
+
+target
+.idea
+.flattened-pom.xml
