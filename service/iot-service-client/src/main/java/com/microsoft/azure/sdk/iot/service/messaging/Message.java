@@ -10,7 +10,9 @@ import lombok.Setter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -21,6 +23,8 @@ import java.util.UUID;
 public class Message
 {
     private final static String deliveryAcknowledgementPropertyName = "iothub-ack";
+
+    public static final Charset DEFAULT_IOTHUB_MESSAGE_CHARSET = StandardCharsets.UTF_8;
 
     /**
     * [Required for two way requests] Used to correlate two-way communication.
@@ -42,6 +46,13 @@ public class Message
     {
         this.to = "/devices/" + deviceId + "/messages/devicebound";
     }
+
+    /**
+     * Expiry time in UTC Interpreted by hub on C2D messages. Ignored in other cases.
+     **/
+    @Getter
+    @Setter
+    private Date expiryTimeUtc;
 
     /**
     * Used by receiver to Abandon, Reject or Complete the message
@@ -111,6 +122,11 @@ public class Message
     public Message(byte[] byteArray)
     {
         this();
+
+        if (byteArray == null)
+        {
+            throw new IllegalArgumentException("Message body cannot be 'null'.");
+        }
         this.body = byteArray;
     }
 
