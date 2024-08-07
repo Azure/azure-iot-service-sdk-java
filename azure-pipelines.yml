@@ -17,11 +17,11 @@ steps:
     sources: $(Agent.BuildDirectory)/s
     output: $(Agent.BuildDirectory)/s/_out
 
-- task: AzureFileCopy@6
+- task: AzureFileCopy@3
   displayName: ' Copy Artifacts to Partner Release Pipeline Storage'
   inputs:
     SourcePath: '$(Agent.BuildDirectory)/s/_out'
     azureSubscription: azuresdkpartnerdropssc
     Destination: AzureBlob
     storage: azuresdkpartnerdrops
-    ContainerName: 'drops/azure-iot-sdk/java/'
+    ContainerName: 'drops/azure-iot-sdk/java'
