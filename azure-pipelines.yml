@@ -17,7 +17,7 @@ steps:
     sources: $(Agent.BuildDirectory)/s
     output: $(Agent.BuildDirectory)/s/_out
 
-- task: AzureFileCopy@4
+- task: AzureFileCopy@5
   displayName: ' Copy Artifacts to Partner Release Pipeline Storage'
   inputs:
     SourcePath: '$(Agent.BuildDirectory)/s/_out'
