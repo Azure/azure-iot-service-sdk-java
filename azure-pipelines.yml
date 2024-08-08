@@ -24,4 +24,4 @@ steps:
     azureSubscription: azuresdkpartnerdropssc
     Destination: AzureBlob
     storage: azuresdkpartnerdrops
-    ContainerName: 'drops / azure-iot-sdk / java'
+    ContainerName: 'azure-iot-sdk/java'
