@@ -20,7 +20,7 @@ steps:
 - task: AzureFileCopy@6
   displayName: ' Copy Artifacts to Partner Release Pipeline Storage'
   inputs:
-    SourcePath: '$(Agent.BuildDirectory)/s/_out'
+    SourcePath: '$(Agent.BuildDirectory)/s/_out/'
     azureSubscription: azuresdkpartnerdropssc
     Destination: AzureBlob
     storage: azuresdkpartnerdrops
