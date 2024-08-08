@@ -24,4 +24,4 @@ steps:
     azureSubscription: azuresdkpartnerdropssc
     Destination: AzureBlob
     storage: azuresdkpartnerdrops
-    ContainerName: 'drops/test1'
+    ContainerName: 'drops'
