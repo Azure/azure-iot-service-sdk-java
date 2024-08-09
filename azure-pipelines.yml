@@ -26,4 +26,4 @@ steps:
     storage: azuresdkpartnerdrops
     ContainerName: 'drops'
     BlobPrefix: 'azure-iot-sdk/java'
-    AdditionalArgumentsForBlobCopy: '--as-subdir=false'
+    AdditionalArgumentsForBlobCopy: '--recursive --as-subdir=false'
