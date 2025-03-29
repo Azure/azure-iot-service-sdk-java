@@ -355,3 +355,11 @@ MigrationBackup/
 !iothub-service-client.properties
 !provisioning-device-client.properties
 !provisioning-service-client.properties
+/service/iot-service-client/target/
+
+# Netbeans
+nb-configuration.xml
+
+# Maven
+target/
+.flattened-pom.xml
