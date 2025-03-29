@@ -360,6 +360,9 @@ MigrationBackup/
 # Netbeans
 nb-configuration.xml
 
+# IntelliJ
+.idea
+
 # Maven
 target/
 .flattened-pom.xml

@@ -147,6 +147,7 @@ public class JobsResponseParser
 
     // The contents of outcome for job query if any.
     private static final String DEVICE_METHOD_RESPONSE_TAG = "deviceMethodResponse";
+    @Getter
     private MethodParser methodResponse;
 
     // Required if type is updateTwin.
