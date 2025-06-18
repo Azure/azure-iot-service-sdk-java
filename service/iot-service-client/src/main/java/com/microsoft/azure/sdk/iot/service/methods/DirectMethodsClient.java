@@ -263,8 +263,8 @@ public final class DirectMethodsClient
             this.getAuthenticationToken(),
             proxy);
 
-        httpRequest.setReadTimeoutSeconds(this.options.getHttpReadTimeoutSeconds());
-        httpRequest.setConnectTimeoutSeconds(this.options.getHttpConnectTimeoutSeconds());
+        httpRequest.setReadTimeoutSeconds(Math.max(this.options.getHttpReadTimeoutSeconds(), options.getMethodResponseTimeoutSeconds()));
+        httpRequest.setConnectTimeoutSeconds(Math.max(this.options.getHttpConnectTimeoutSeconds(), options.getMethodConnectTimeoutSeconds()));
         httpRequest.setHeaderField(REQUEST_ID, String.valueOf(requestId++));
 
         HttpResponse response = httpRequest.send();
