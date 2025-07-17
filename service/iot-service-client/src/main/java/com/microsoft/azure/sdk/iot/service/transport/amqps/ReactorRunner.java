@@ -18,19 +18,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ReactorRunner
 {
-    private final static String THREAD_NAME = "azure-iot-sdk-ReactorRunner";
-    private final String threadName;
     private final Reactor reactor;
     private static final int REACTOR_TIMEOUT = 3141; // reactor timeout in milliseconds
     private static final int MAX_FRAME_SIZE = 4 * 1024;
     private final AmqpConnectionHandler handler;
 
     public ReactorRunner(AmqpConnectionHandler handler) throws IOException
-    {
-        this(null, null, handler);
-    }
-
-    public ReactorRunner(String threadNamePrefix, String threadNamePostfix, AmqpConnectionHandler handler) throws IOException
     {
         ReactorOptions options = new ReactorOptions();
 
@@ -41,26 +34,20 @@ public class ReactorRunner
         options.setMaxFrameSize(MAX_FRAME_SIZE);
 
         this.reactor = Proton.reactor(options, handler);
-        this.threadName = threadNamePrefix + "-" + THREAD_NAME + "-" + threadNamePostfix;
         this.handler = handler;
     }
 
     public void run()
     {
-        if (this.threadName != null)
-        {
-            Thread.currentThread().setName(this.threadName);
-        }
-
         try
         {
-            log.trace("Starting reactor thread {}", this.threadName);
+            log.trace("Starting reactor on thread {}", Thread.currentThread().getName());
             this.reactor.setTimeout(REACTOR_TIMEOUT);
             this.reactor.run();
         }
         catch (HandlerException e)
         {
-            log.debug("Encountered an exception while running reactor on thread {}", threadName, e);
+            log.debug("Encountered an exception while running reactor on thread {}", Thread.currentThread().getName(), e);
         }
         finally
         {
@@ -68,7 +55,7 @@ public class ReactorRunner
             this.reactor.free();
         }
 
-        log.trace("Finished reactor thread {}", this.threadName);
+        log.trace("Finished reactor on thread {}", Thread.currentThread().getName());
     }
 
     public void stop(int timeoutMilliseconds) throws InterruptedException
