@@ -76,7 +76,7 @@ public class ScheduledJobTest {
                 "\"endTimeUtc\":\"2017-07-08T00:04:05.0556Z\"," +
                 "\"createdDateTimeUtc\":\"2017-07-08T00:02:31.6162976Z\"," +
                 "\"lastUpdatedDateTimeUtc\":\"2017-07-08T00:04:05.0736166Z\"," +
-                "\"outcome\":{}," +
+                "\"outcome\":{\"deviceMethodResponse\":null}," +
                 "\"error\":{" +
                     "\"code\":\"JobRunPreconditionFailed\"," +
                 "   \"description\":\"The job did not start within specified period: either device did not come online or invalid endTime specified.\"" +
