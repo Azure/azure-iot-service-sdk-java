@@ -158,7 +158,7 @@ public class ScheduledJob
 
         if (jobsResponseParser.getOutcome() != null)
         {
-            if (this.jobType == ScheduledJobType.scheduleDeviceMethod)
+            if (this.jobType == ScheduledJobType.scheduleDeviceMethod && jobsResponseParser.getCloudToDeviceMethod() != null)
             {
                 try
                 {
