@@ -163,8 +163,8 @@ public class ScheduledJob
                 try
                 {
                     this.outcomeResult = new DirectMethodResponse(
-                        jobsResponseParser.getCloudToDeviceMethod().getStatus(),
-                        new GsonBuilder().create().toJsonTree(jobsResponseParser.getCloudToDeviceMethod().getPayload()));
+                            jobsResponseParser.getMethodResponse().getStatus(),
+                        new GsonBuilder().create().toJsonTree(jobsResponseParser.getMethodResponse().getPayload()));
                 }
                 catch (IllegalArgumentException e)
                 {
