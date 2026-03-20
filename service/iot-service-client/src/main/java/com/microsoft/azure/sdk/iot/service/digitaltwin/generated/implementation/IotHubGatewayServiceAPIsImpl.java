@@ -6,17 +6,19 @@
 
 package com.microsoft.azure.sdk.iot.service.digitaltwin.generated.implementation;
 
+import com.azure.core.http.HttpPipeline;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.generated.IotHubGatewayServiceAPIs;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.generated.DigitalTwins;
-import com.microsoft.rest.ServiceClient;
-import com.microsoft.rest.RestClient;
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Initializes a new instance of the IotHubGatewayServiceAPIs class.
  */
-public class IotHubGatewayServiceAPIsImpl extends ServiceClient implements IotHubGatewayServiceAPIs {
+public class IotHubGatewayServiceAPIsImpl implements IotHubGatewayServiceAPIs {
+
+    private final HttpPipeline httpPipeline;
+    private final ObjectMapper objectMapper;
+    private final String baseUrl;
 
     /** Version of the Api. */
     private String apiVersion;
@@ -54,58 +56,37 @@ public class IotHubGatewayServiceAPIsImpl extends ServiceClient implements IotHu
         return this.digitalTwins;
     }
 
-    /**
-     * Initializes an instance of IotHubGatewayServiceAPIs client.
-     */
-    public IotHubGatewayServiceAPIsImpl() {
-        this("https://fully-qualified-iothubname.azure-devices.net");
+    @Override
+    public HttpPipeline httpPipeline() {
+        return this.httpPipeline;
+    }
+
+    @Override
+    public ObjectMapper serializerAdapter() {
+        return this.objectMapper;
+    }
+
+    @Override
+    public String baseUrl() {
+        return this.baseUrl;
     }
 
     /**
      * Initializes an instance of IotHubGatewayServiceAPIs client.
      *
-     * @param baseUrl the base URL of the host
+     * @param httpPipeline the HTTP pipeline for sending requests
+     * @param objectMapper the Jackson ObjectMapper for serialization
+     * @param baseUrl the base URL for the service
      */
-    private IotHubGatewayServiceAPIsImpl(String baseUrl) {
-        super(baseUrl);
-        initialize();
-    }
-
-    /**
-     * Initializes an instance of IotHubGatewayServiceAPIs client.
-     *
-     * @param clientBuilder the builder for building an OkHttp client, bundled with user configurations
-     * @param restBuilder the builder for building an Retrofit client, bundled with user configurations
-     */
-    public IotHubGatewayServiceAPIsImpl(OkHttpClient.Builder clientBuilder, Retrofit.Builder restBuilder) {
-        this("https://fully-qualified-iothubname.azure-devices.net", clientBuilder, restBuilder);
-        initialize();
-    }
-
-    /**
-     * Initializes an instance of IotHubGatewayServiceAPIs client.
-     *
-     * @param baseUrl the base URL of the host
-     * @param clientBuilder the builder for building an OkHttp client, bundled with user configurations
-     * @param restBuilder the builder for building an Retrofit client, bundled with user configurations
-     */
-    private IotHubGatewayServiceAPIsImpl(String baseUrl, OkHttpClient.Builder clientBuilder, Retrofit.Builder restBuilder) {
-        super(baseUrl, clientBuilder, restBuilder);
-        initialize();
-    }
-
-    /**
-     * Initializes an instance of IotHubGatewayServiceAPIs client.
-     *
-     * @param restClient the REST client containing pre-configured settings
-     */
-    public IotHubGatewayServiceAPIsImpl(RestClient restClient) {
-        super(restClient);
+    public IotHubGatewayServiceAPIsImpl(HttpPipeline httpPipeline, ObjectMapper objectMapper, String baseUrl) {
+        this.httpPipeline = httpPipeline;
+        this.objectMapper = objectMapper;
+        this.baseUrl = baseUrl;
         initialize();
     }
 
     private void initialize() {
         this.apiVersion = "2020-09-30";
-        this.digitalTwins = new DigitalTwinsImpl(retrofit(), this);
+        this.digitalTwins = new DigitalTwinsImpl(this);
     }
 }
