@@ -1,7 +1,7 @@
 package tests.integration.com.microsoft.azure.sdk.iot.helpers.proxy.impl;
 
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.udt.nio.NioUdtProvider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tests.integration.com.microsoft.azure.sdk.iot.helpers.proxy.HttpProxyServer;
@@ -80,13 +80,8 @@ public class ServerGroup {
     static {
         TRANSPORT_PROTOCOL_SELECTOR_PROVIDERS.put(TransportProtocol.TCP, SelectorProvider.provider());
 
-        // allow the proxy to operate without UDT support. this allows clients that do not use UDT to exclude the barchart
-        // dependency completely.
-        if (ProxyUtils.isUdtAvailable()) {
-            TRANSPORT_PROTOCOL_SELECTOR_PROVIDERS.put(TransportProtocol.UDT, NioUdtProvider.BYTE_PROVIDER);
-        } else {
-            log.trace("UDT provider not found on classpath. UDT transport will not be available.");
-        }
+        // UDT transport is no longer available (netty-transport-udt was removed in Netty 4.1.87+)
+        log.trace("UDT provider is no longer available. UDT transport will not be available.");
     }
 
     /**

@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
+
 @AllArgsConstructor
 public class ServiceClientCredentialsProvider implements HttpPipelinePolicy {
 
@@ -20,7 +22,11 @@ public class ServiceClientCredentialsProvider implements HttpPipelinePolicy {
 
     @Override
     public Mono<HttpResponse> process(HttpPipelineCallContext context, HttpPipelineNextPolicy next) {
-        context.getHttpRequest().setHeader(AUTHORIZATION, sasTokenProvider.getSasToken());
+        try {
+            context.getHttpRequest().setHeader(AUTHORIZATION, sasTokenProvider.getSasToken());
+        } catch (IOException e) {
+            return Mono.error(e);
+        }
         return next.process();
     }
 }

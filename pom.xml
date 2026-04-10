@@ -57,7 +57,7 @@
             <dependency>
                 <groupId>com.azure</groupId>
                 <artifactId>azure-core-http-netty</artifactId>
-                <version>1.11.6</version>
+                <version>1.16.3</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
@@ -67,7 +67,7 @@
             <dependency>
                 <groupId>com.azure</groupId>
                 <artifactId>azure-core</artifactId>
-                <version>1.12.0</version>
+                <version>1.57.1</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -172,8 +172,8 @@
         <dice-provider-artifact-id>dice-provider</dice-provider-artifact-id>
         <x509-provider-artifact-id>x509-provider</x509-provider-artifact-id>
 
-        <iot-service-client-version>2.2.1</iot-service-client-version>
-        <iot-device-client-version>2.1.2</iot-device-client-version>
+        <iot-service-client-version>2.2.0</iot-service-client-version>
+        <iot-device-client-version>2.5.0</iot-device-client-version>
         <security-provider-version>2.0.1</security-provider-version>
         <tpm-provider-emulator-version>2.0.1</tpm-provider-emulator-version>
         <tpm-provider-version>2.0.1</tpm-provider-version>

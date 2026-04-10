@@ -41,4 +41,23 @@ public final class ScheduledJobsClientOptions
     @Getter
     @Builder.Default
     private final int httpConnectTimeoutSeconds = DEFAULT_HTTP_CONNECT_TIMEOUT_SECONDS;
+
+    // Custom builder to add validation for timeout values
+    public static class ScheduledJobsClientOptionsBuilder
+    {
+        public ScheduledJobsClientOptions build()
+        {
+            if (httpReadTimeoutSeconds$set && httpReadTimeoutSeconds$value < 0)
+            {
+                throw new IllegalArgumentException("httpReadTimeoutSeconds must be a non-negative value");
+            }
+            if (httpConnectTimeoutSeconds$set && httpConnectTimeoutSeconds$value < 0)
+            {
+                throw new IllegalArgumentException("httpConnectTimeoutSeconds must be a non-negative value");
+            }
+            return new ScheduledJobsClientOptions(proxyOptions,
+                httpReadTimeoutSeconds$set ? httpReadTimeoutSeconds$value : DEFAULT_HTTP_READ_TIMEOUT_SECONDS,
+                httpConnectTimeoutSeconds$set ? httpConnectTimeoutSeconds$value : DEFAULT_HTTP_CONNECT_TIMEOUT_SECONDS);
+        }
+    }
 }

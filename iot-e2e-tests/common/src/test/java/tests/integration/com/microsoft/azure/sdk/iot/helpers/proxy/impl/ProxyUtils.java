@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.udt.nio.NioUdtProvider;
+
 import io.netty.handler.codec.http.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -555,11 +555,7 @@ public class ProxyUtils {
      * @return true if UDT is available
      */
     public static boolean isUdtAvailable() {
-        try {
-            return NioUdtProvider.BYTE_PROVIDER != null;
-        } catch (NoClassDefFoundError e) {
-            return false;
-        }
+        return false;
     }
 
     /**
