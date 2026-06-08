@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.channel.udt.nio.NioUdtProvider;
+
 import io.netty.handler.codec.http.*;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.traffic.GlobalTrafficShapingHandler;
@@ -583,10 +583,7 @@ public class ProxyToServerConnection extends ProxyConnection<HttpResponse>
                 });
                 break;
             case UDT:
-                log.trace("Connecting to server with UDT");
-                cb.channelFactory(NioUdtProvider.BYTE_CONNECTOR)
-                        .option(ChannelOption.SO_REUSEADDR, true);
-                break;
+                throw new UnknownTransportProtocolException(transportProtocol);
             default:
                 throw new UnknownTransportProtocolException(transportProtocol);
             }
