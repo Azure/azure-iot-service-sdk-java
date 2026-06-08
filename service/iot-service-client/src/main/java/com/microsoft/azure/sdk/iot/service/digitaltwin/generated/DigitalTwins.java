@@ -6,14 +6,12 @@
 
 package com.microsoft.azure.sdk.iot.service.digitaltwin.generated;
 
+import com.azure.core.exception.HttpResponseException;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.generated.models.DigitalTwinGetDigitalTwinHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.generated.models.DigitalTwinInvokeComponentCommandHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.generated.models.DigitalTwinInvokeRootLevelCommandHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.generated.models.DigitalTwinUpdateDigitalTwinHeaders;
-import com.microsoft.rest.RestException;
-import com.microsoft.rest.ServiceCallback;
-import com.microsoft.rest.ServiceFuture;
-import com.microsoft.rest.ServiceResponseWithHeaders;
+import com.microsoft.azure.sdk.iot.service.digitaltwin.models.ServiceResponseWithHeaders;
 
 import java.util.List;
 import rx.Observable;
@@ -28,21 +26,11 @@ public interface DigitalTwins {
      *
      * @param id Digital Twin ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
+     * @throws HttpResponseException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the Object object if successful.
      */
     Object getDigitalTwin(String id);
-
-    /**
-     * Gets a digital twin.
-     *
-     * @param id Digital Twin ID.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    ServiceFuture<Object> getDigitalTwinAsync(String id, final ServiceCallback<Object> serviceCallback);
 
     /**
      * Gets a digital twin.
@@ -68,21 +56,10 @@ public interface DigitalTwins {
      * @param id Digital Twin ID.
      * @param digitalTwinPatch json-patch contents to update.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
+     * @throws HttpResponseException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     void updateDigitalTwin(String id, List<Object> digitalTwinPatch);
-
-    /**
-     * Updates a digital twin.
-     *
-     * @param id Digital Twin ID.
-     * @param digitalTwinPatch json-patch contents to update.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    ServiceFuture<Void> updateDigitalTwinAsync(String id, List<Object> digitalTwinPatch, final ServiceCallback<Void> serviceCallback);
 
     /**
      * Updates a digital twin.
@@ -103,17 +80,6 @@ public interface DigitalTwins {
      * @return the {@link ServiceResponseWithHeaders} object if successful.
      */
     Observable<ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders>> updateDigitalTwinWithServiceResponseAsync(String id, List<Object> digitalTwinPatch);
-    /**
-     * Updates a digital twin.
-     *
-     * @param id Digital Twin ID.
-     * @param digitalTwinPatch json-patch contents to update.
-     * @param ifMatch the String value
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     */
-    void updateDigitalTwin(String id, List<Object> digitalTwinPatch, String ifMatch);
 
     /**
      * Updates a digital twin.
@@ -121,11 +87,11 @@ public interface DigitalTwins {
      * @param id Digital Twin ID.
      * @param digitalTwinPatch json-patch contents to update.
      * @param ifMatch the String value
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws HttpResponseException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
-    ServiceFuture<Void> updateDigitalTwinAsync(String id, List<Object> digitalTwinPatch, String ifMatch, final ServiceCallback<Void> serviceCallback);
+    void updateDigitalTwin(String id, List<Object> digitalTwinPatch, String ifMatch);
 
     /**
      * Updates a digital twin.
@@ -155,22 +121,11 @@ public interface DigitalTwins {
      * @param id the String value
      * @param commandName the String value
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
+     * @throws HttpResponseException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the Object object if successful.
      */
     Object invokeRootLevelCommand(String id, String commandName);
-
-    /**
-     * Invoke a digital twin root level command.
-     *
-     * @param id the String value
-     * @param commandName the String value
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    ServiceFuture<Object> invokeRootLevelCommandAsync(String id, String commandName, final ServiceCallback<Object> serviceCallback);
 
     /**
      * Invoke a digital twin root level command.
@@ -191,20 +146,6 @@ public interface DigitalTwins {
      * @return the observable to the Object object
      */
     Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders>> invokeRootLevelCommandWithServiceResponseAsync(String id, String commandName);
-    /**
-     * Invoke a digital twin root level command.
-     *
-     * @param id the String value
-     * @param commandName the String value
-     * @param payload the Object value
-     * @param connectTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
-     * @param responseTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the Object object if successful.
-     */
-    Object invokeRootLevelCommand(String id, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds);
 
     /**
      * Invoke a digital twin root level command.
@@ -214,11 +155,12 @@ public interface DigitalTwins {
      * @param payload the Object value
      * @param connectTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
      * @param responseTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws HttpResponseException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @return the Object object if successful.
      */
-    ServiceFuture<Object> invokeRootLevelCommandAsync(String id, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds, final ServiceCallback<Object> serviceCallback);
+    Object invokeRootLevelCommand(String id, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds);
 
     /**
      * Invoke a digital twin root level command.
@@ -253,23 +195,11 @@ public interface DigitalTwins {
      * @param componentPath the String value
      * @param commandName the String value
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
+     * @throws HttpResponseException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the Object object if successful.
      */
     Object invokeComponentCommand(String id, String componentPath, String commandName);
-
-    /**
-     * Invoke a digital twin command.
-     *
-     * @param id the String value
-     * @param componentPath the String value
-     * @param commandName the String value
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    ServiceFuture<Object> invokeComponentCommandAsync(String id, String componentPath, String commandName, final ServiceCallback<Object> serviceCallback);
 
     /**
      * Invoke a digital twin command.
@@ -292,21 +222,6 @@ public interface DigitalTwins {
      * @return the observable to the Object object
      */
     Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders>> invokeComponentCommandWithServiceResponseAsync(String id, String componentPath, String commandName);
-    /**
-     * Invoke a digital twin command.
-     *
-     * @param id the String value
-     * @param componentPath the String value
-     * @param commandName the String value
-     * @param payload the Object value
-     * @param connectTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
-     * @param responseTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the Object object if successful.
-     */
-    Object invokeComponentCommand(String id, String componentPath, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds);
 
     /**
      * Invoke a digital twin command.
@@ -317,11 +232,12 @@ public interface DigitalTwins {
      * @param payload the Object value
      * @param connectTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
      * @param responseTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws HttpResponseException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @return the Object object if successful.
      */
-    ServiceFuture<Object> invokeComponentCommandAsync(String id, String componentPath, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds, final ServiceCallback<Object> serviceCallback);
+    Object invokeComponentCommand(String id, String componentPath, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds);
 
     /**
      * Invoke a digital twin command.

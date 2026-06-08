@@ -6,18 +6,33 @@
 
 package com.microsoft.azure.sdk.iot.service.digitaltwin.generated;
 
-import com.microsoft.rest.RestClient;
+import com.azure.core.http.HttpPipeline;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The interface for IotHubGatewayServiceAPIs class.
  */
 public interface IotHubGatewayServiceAPIs {
     /**
-     * Gets the REST client.
+     * Gets the HTTP pipeline.
      *
-     * @return the {@link RestClient} object.
+     * @return the {@link HttpPipeline} object.
     */
-    RestClient restClient();
+    HttpPipeline httpPipeline();
+
+    /**
+     * Gets the serializer adapter (ObjectMapper).
+     *
+     * @return the ObjectMapper used for serialization.
+     */
+    ObjectMapper serializerAdapter();
+
+    /**
+     * Gets the base URL.
+     *
+     * @return the base URL.
+     */
+    String baseUrl();
 
     /**
      * The default base URL.

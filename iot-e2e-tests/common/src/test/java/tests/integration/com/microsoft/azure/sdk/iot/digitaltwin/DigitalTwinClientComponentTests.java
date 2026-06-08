@@ -14,7 +14,7 @@ import com.microsoft.azure.sdk.iot.service.digitaltwin.customized.DigitalTwinGet
 import com.microsoft.azure.sdk.iot.service.digitaltwin.models.*;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.serialization.BasicDigitalTwin;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
-import com.microsoft.rest.ServiceResponseWithHeaders;
+import com.microsoft.azure.sdk.iot.service.digitaltwin.models.ServiceResponseWithHeaders;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.*;
 import org.junit.rules.Timeout;
