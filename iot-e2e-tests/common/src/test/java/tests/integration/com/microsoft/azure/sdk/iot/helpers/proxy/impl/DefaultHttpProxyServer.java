@@ -7,7 +7,7 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.ChannelGroupFuture;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.udt.nio.NioUdtProvider;
+
 import io.netty.handler.traffic.GlobalTrafficShapingHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.slf4j.Logger;
@@ -510,11 +510,7 @@ public class DefaultHttpProxyServer implements HttpProxyServer {
                 });
                 break;
             case UDT:
-                LOG.info("Proxy listening with UDT transport");
-                serverBootstrap.channelFactory(NioUdtProvider.BYTE_ACCEPTOR)
-                        .option(ChannelOption.SO_BACKLOG, 10)
-                        .option(ChannelOption.SO_REUSEADDR, true);
-                break;
+                throw new UnknownTransportProtocolException(transportProtocol);
             default:
                 throw new UnknownTransportProtocolException(transportProtocol);
         }
