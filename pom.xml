@@ -55,9 +55,9 @@
                 <version>1.7.32</version>
             </dependency>
             <dependency>
-                <groupId>com.microsoft.rest</groupId>
-                <artifactId>client-runtime</artifactId>
-                <version>1.7.14</version>
+                <groupId>com.azure</groupId>
+                <artifactId>azure-core-http-netty</artifactId>
+                <version>1.16.3</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
@@ -67,7 +67,7 @@
             <dependency>
                 <groupId>com.azure</groupId>
                 <artifactId>azure-core</artifactId>
-                <version>1.12.0</version>
+                <version>1.57.1</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -97,7 +97,7 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.7</version> <!--samples only-->
+                <version>2.14.0</version> <!--samples only-->
             </dependency>
             <dependency>
                 <groupId>com.azure</groupId>
@@ -159,18 +159,12 @@
                 <artifactId>log4j-slf4j-impl</artifactId>
                 <version>2.17.1</version>  <!--e2e tests and samples only-->
             </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>32.0.0-jre</version> <!-- Nested dependency from ms client runtime. Overriding the version to use newer version-->
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <properties>
-        <iot-device-client-artifact-id>iot-device-client</iot-device-client-artifact-id>
         <iot-service-client-artifact-id>iot-service-client</iot-service-client-artifact-id>
-        <provisioning-device-client-artifact-id>provisioning-device-client</provisioning-device-client-artifact-id>
-        <provisioning-service-client-artifact-id>provisioning-service-client</provisioning-service-client-artifact-id>
+        <iot-device-client-artifact-id>iot-device-client</iot-device-client-artifact-id>
         <security-provider-artifact-id>security-provider</security-provider-artifact-id>
         <tpm-provider-emulator-artifact-id>tpm-provider-emulator</tpm-provider-emulator-artifact-id>
         <tpm-provider-artifact-id>tpm-provider</tpm-provider-artifact-id>
@@ -178,10 +172,8 @@
         <dice-provider-artifact-id>dice-provider</dice-provider-artifact-id>
         <x509-provider-artifact-id>x509-provider</x509-provider-artifact-id>
 
-        <iot-device-client-version>2.4.0</iot-device-client-version>
-        <iot-service-client-version>2.1.10</iot-service-client-version>
-        <provisioning-device-client-version>2.1.2</provisioning-device-client-version>
-        <provisioning-service-client-version>2.0.3</provisioning-service-client-version>
+        <iot-service-client-version>2.2.0</iot-service-client-version>
+        <iot-device-client-version>2.5.0</iot-device-client-version>
         <security-provider-version>2.0.1</security-provider-version>
         <tpm-provider-emulator-version>2.0.1</tpm-provider-emulator-version>
         <tpm-provider-version>2.0.1</tpm-provider-version>

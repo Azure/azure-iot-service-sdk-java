@@ -8,7 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.DigitalTwinAsyncClient;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.UpdateOperationUtility;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.serialization.BasicDigitalTwin;
-import com.microsoft.rest.RestException;
+import com.azure.core.exception.HttpResponseException;
 
 import java.io.IOException;
 import java.time.ZoneOffset;
@@ -165,8 +165,8 @@ public class Thermostat {
                         },
                         error ->
                         {
-                            RestException ex = (RestException)error;
-                            if(ex.response().code() == 404) {
+                            HttpResponseException ex = (HttpResponseException)error;
+                            if(ex.getResponse().getStatusCode() == 404) {
                                 System.out.println("Invoked Command " + commandName + " failed: " + error);
                             }
                             else {

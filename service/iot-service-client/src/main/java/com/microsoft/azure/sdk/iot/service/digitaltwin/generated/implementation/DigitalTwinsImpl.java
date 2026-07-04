@@ -6,74 +6,96 @@
 
 package com.microsoft.azure.sdk.iot.service.digitaltwin.generated.implementation;
 
-import com.google.common.reflect.TypeToken;
+import com.azure.core.http.HttpMethod;
+import com.azure.core.http.HttpRequest;
+import com.azure.core.http.HttpResponse;
+import com.azure.core.exception.HttpResponseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.generated.DigitalTwins;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.generated.models.DigitalTwinGetDigitalTwinHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.generated.models.DigitalTwinInvokeComponentCommandHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.generated.models.DigitalTwinInvokeRootLevelCommandHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.generated.models.DigitalTwinUpdateDigitalTwinHeaders;
-import com.microsoft.rest.*;
-import okhttp3.ResponseBody;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.http.*;
+import com.microsoft.azure.sdk.iot.service.digitaltwin.models.ServiceResponseWithHeaders;
 import rx.Observable;
 import rx.functions.Func1;
 
 import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
  * An instance of this class provides access to all the operations defined
  * in DigitalTwins.
  */
-@SuppressWarnings("UnstableApiUsage")
 public class DigitalTwinsImpl implements DigitalTwins {
-    /** The Retrofit service to perform REST calls. */
-    private final DigitalTwinsService service;
     /** The service client containing this operation class. */
     private final IotHubGatewayServiceAPIsImpl client;
 
     /**
      * Initializes an instance of DigitalTwins.
      *
-     * @param retrofit the Retrofit instance built from a Retrofit Builder.
      * @param client the instance of the service client containing this operation class.
      */
-    public DigitalTwinsImpl(Retrofit retrofit, IotHubGatewayServiceAPIsImpl client) {
-        this.service = retrofit.create(DigitalTwinsService.class);
+    public DigitalTwinsImpl(IotHubGatewayServiceAPIsImpl client) {
         this.client = client;
     }
 
-    /**
-     * The interface defining all the services for DigitalTwins to be
-     * used by Retrofit to perform actually REST calls.
-     */
-    interface DigitalTwinsService {
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.sdk.iot.service.digitaltwin.generated.DigitalTwins getDigitalTwin" })
-        @GET("digitaltwins/{id}")
-        Observable<Response<ResponseBody>> getDigitalTwin(@Path("id") String id, @Query("api-version") String apiVersion);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.sdk.iot.service.digitaltwin.generated.DigitalTwins updateDigitalTwin" })
-        @PATCH("digitaltwins/{id}")
-        Observable<Response<ResponseBody>> updateDigitalTwin(@Path("id") String id, @Body List<Object> digitalTwinPatch, @Header("If-Match") String ifMatch, @Query("api-version") String apiVersion);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.sdk.iot.service.digitaltwin.generated.DigitalTwins invokeRootLevelCommand" })
-        @POST("digitaltwins/{id}/commands/{commandName}")
-        Observable<Response<ResponseBody>> invokeRootLevelCommand(@Path("id") String id, @Path("commandName") String commandName, @Body Object payload, @Query("api-version") String apiVersion, @Query("connectTimeoutInSeconds") Integer connectTimeoutInSeconds, @Query("responseTimeoutInSeconds") Integer responseTimeoutInSeconds);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.sdk.iot.service.digitaltwin.generated.DigitalTwins invokeComponentCommand" })
-        @POST("digitaltwins/{id}/components/{componentPath}/commands/{commandName}")
-        Observable<Response<ResponseBody>> invokeComponentCommand(@Path("id") String id, @Path("componentPath") String componentPath, @Path("commandName") String commandName, @Body Object payload, @Query("api-version") String apiVersion, @Query("connectTimeoutInSeconds") Integer connectTimeoutInSeconds, @Query("responseTimeoutInSeconds") Integer responseTimeoutInSeconds);
-
+    private ObjectMapper objectMapper() {
+        return client.serializerAdapter();
     }
+
+    private String buildUrl(String path) {
+        String base = client.baseUrl();
+        if (base.endsWith("/")) {
+            base = base.substring(0, base.length() - 1);
+        }
+        return base + "/" + path;
+    }
+
+    private static void appendQueryParam(StringBuilder sb, String key, Object value) {
+        if (value == null) {
+            return;
+        }
+        sb.append(sb.indexOf("?") >= 0 ? "&" : "?");
+        sb.append(key).append("=").append(value);
+    }
+
+    /**
+     * Sends a request using the HttpPipeline and returns the response (blocking).
+     */
+    private HttpResponse sendRequest(HttpMethod method, String url, String body, String ifMatch) throws IOException {
+        HttpRequest request = new HttpRequest(method, new URL(url));
+        request.setHeader("Content-Type", "application/json; charset=utf-8");
+        if (ifMatch != null) {
+            request.setHeader("If-Match", ifMatch);
+        }
+        if (body != null) {
+            request.setBody(body.getBytes(StandardCharsets.UTF_8));
+        }
+        HttpResponse response = client.httpPipeline().send(request).block();
+        if (response == null) {
+            throw new IOException("Null response received from HttpPipeline");
+        }
+        return response;
+    }
+
+    private void throwIfError(HttpResponse response, String responseBody) {
+        int statusCode = response.getStatusCode();
+        if (statusCode < 200 || statusCode >= 300) {
+            throw new HttpResponseException("Request failed with status code " + statusCode + ": " + responseBody, response);
+        }
+    }
+
+    // ========== getDigitalTwin ==========
 
     /**
      * Gets a digital twin.
      *
      * @param id Digital Twin ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
+     * @throws HttpResponseException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the Object object if successful.
      */
@@ -85,22 +107,9 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * Gets a digital twin.
      *
      * @param id Digital Twin ID.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<Object> getDigitalTwinAsync(String id, final ServiceCallback<Object> serviceCallback) {
-        return ServiceFuture.fromHeaderResponse(getDigitalTwinWithServiceResponseAsync(id), serviceCallback);
-    }
-
-    /**
-     * Gets a digital twin.
-     *
-     * @param id Digital Twin ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Object object
      */
-    @SuppressWarnings({"Convert2Lambda", "Anonymous2MethodRef"})
     public Observable<Object> getDigitalTwinAsync(String id) {
         return getDigitalTwinWithServiceResponseAsync(id).map(new Func1<ServiceResponseWithHeaders<Object, DigitalTwinGetDigitalTwinHeaders>, Object>() {
             @Override
@@ -117,31 +126,33 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Object object
      */
-    @SuppressWarnings("Convert2Lambda")
     public Observable<ServiceResponseWithHeaders<Object, DigitalTwinGetDigitalTwinHeaders>> getDigitalTwinWithServiceResponseAsync(String id) {
         if (id == null) {
             throw new IllegalArgumentException("Parameter id is required and cannot be null.");
         }
-        final String apiVersion = "2020-09-30";
-        return service.getDigitalTwin(id, apiVersion)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponseWithHeaders<Object, DigitalTwinGetDigitalTwinHeaders>>>() {
-                @Override
-                public Observable<ServiceResponseWithHeaders<Object, DigitalTwinGetDigitalTwinHeaders>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponseWithHeaders<Object, DigitalTwinGetDigitalTwinHeaders> clientResponse = getDigitalTwinDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return Observable.defer(() -> {
+            try {
+                final String apiVersion = "2020-09-30";
+                StringBuilder urlBuilder = new StringBuilder(buildUrl("digitaltwins/" + id));
+                appendQueryParam(urlBuilder, "api-version", apiVersion);
+
+                HttpResponse response = sendRequest(HttpMethod.GET, urlBuilder.toString(), null, null);
+                String responseBody = response.getBodyAsString().block();
+                throwIfError(response, responseBody);
+
+                Object body = objectMapper().readValue(responseBody, Object.class);
+
+                DigitalTwinGetDigitalTwinHeaders headers = new DigitalTwinGetDigitalTwinHeaders();
+                headers.withETag(response.getHeaderValue("ETag"));
+
+                return Observable.just(new ServiceResponseWithHeaders<>(body, headers, response.getStatusCode()));
+            } catch (Throwable t) {
+                return Observable.error(t);
+            }
+        });
     }
 
-    private ServiceResponseWithHeaders<Object, DigitalTwinGetDigitalTwinHeaders> getDigitalTwinDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<Object>() { }.getType())
-                .buildWithHeaders(response, DigitalTwinGetDigitalTwinHeaders.class);
-    }
+    // ========== updateDigitalTwin ==========
 
     /**
      * Updates a digital twin.
@@ -149,7 +160,7 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @param id Digital Twin ID.
      * @param digitalTwinPatch json-patch contents to update.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
+     * @throws HttpResponseException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void updateDigitalTwin(String id, List<Object> digitalTwinPatch) {
@@ -161,23 +172,9 @@ public class DigitalTwinsImpl implements DigitalTwins {
      *
      * @param id Digital Twin ID.
      * @param digitalTwinPatch json-patch contents to update.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<Void> updateDigitalTwinAsync(String id, List<Object> digitalTwinPatch, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromHeaderResponse(updateDigitalTwinWithServiceResponseAsync(id, digitalTwinPatch), serviceCallback);
-    }
-
-    /**
-     * Updates a digital twin.
-     *
-     * @param id Digital Twin ID.
-     * @param digitalTwinPatch json-patch contents to update.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponseWithHeaders} object if successful.
      */
-    @SuppressWarnings({"Convert2Lambda", "Anonymous2MethodRef"})
     public Observable<Void> updateDigitalTwinAsync(String id, List<Object> digitalTwinPatch) {
         return updateDigitalTwinWithServiceResponseAsync(id, digitalTwinPatch).map(new Func1<ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders>, Void>() {
             @Override
@@ -195,28 +192,8 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponseWithHeaders} object if successful.
      */
-    @SuppressWarnings("Convert2Lambda")
     public Observable<ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders>> updateDigitalTwinWithServiceResponseAsync(String id, List<Object> digitalTwinPatch) {
-        if (id == null) {
-            throw new IllegalArgumentException("Parameter id is required and cannot be null.");
-        }
-        if (digitalTwinPatch == null) {
-            throw new IllegalArgumentException("Parameter digitalTwinPatch is required and cannot be null.");
-        }
-        Validator.validate(digitalTwinPatch);
-        final String apiVersion = "2020-09-30";
-        return service.updateDigitalTwin(id, digitalTwinPatch, null, apiVersion)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders>>>() {
-                @Override
-                public Observable<ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders> clientResponse = updateDigitalTwinDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return updateDigitalTwinWithServiceResponseAsync(id, digitalTwinPatch, null);
     }
 
     /**
@@ -226,7 +203,7 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @param digitalTwinPatch json-patch contents to update.
      * @param ifMatch the String value
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
+     * @throws HttpResponseException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void updateDigitalTwin(String id, List<Object> digitalTwinPatch, String ifMatch) {
@@ -239,24 +216,9 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @param id Digital Twin ID.
      * @param digitalTwinPatch json-patch contents to update.
      * @param ifMatch the String value
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<Void> updateDigitalTwinAsync(String id, List<Object> digitalTwinPatch, String ifMatch, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromHeaderResponse(updateDigitalTwinWithServiceResponseAsync(id, digitalTwinPatch, ifMatch), serviceCallback);
-    }
-
-    /**
-     * Updates a digital twin.
-     *
-     * @param id Digital Twin ID.
-     * @param digitalTwinPatch json-patch contents to update.
-     * @param ifMatch the String value
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponseWithHeaders} object if successful.
      */
-    @SuppressWarnings({"Convert2Lambda", "Anonymous2MethodRef"})
     public Observable<Void> updateDigitalTwinAsync(String id, List<Object> digitalTwinPatch, String ifMatch) {
         return updateDigitalTwinWithServiceResponseAsync(id, digitalTwinPatch, ifMatch).map(new Func1<ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders>, Void>() {
             @Override
@@ -275,7 +237,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponseWithHeaders} object if successful.
      */
-    @SuppressWarnings("Convert2Lambda")
     public Observable<ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders>> updateDigitalTwinWithServiceResponseAsync(String id, List<Object> digitalTwinPatch, String ifMatch) {
         if (id == null) {
             throw new IllegalArgumentException("Parameter id is required and cannot be null.");
@@ -283,36 +244,37 @@ public class DigitalTwinsImpl implements DigitalTwins {
         if (digitalTwinPatch == null) {
             throw new IllegalArgumentException("Parameter digitalTwinPatch is required and cannot be null.");
         }
-        Validator.validate(digitalTwinPatch);
-        final String apiVersion = "2020-09-30";
-        return service.updateDigitalTwin(id, digitalTwinPatch, ifMatch, apiVersion)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders>>>() {
-                @Override
-                public Observable<ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders> clientResponse = updateDigitalTwinDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return Observable.defer(() -> {
+            try {
+                final String apiVersion = "2020-09-30";
+                StringBuilder urlBuilder = new StringBuilder(buildUrl("digitaltwins/" + id));
+                appendQueryParam(urlBuilder, "api-version", apiVersion);
+
+                String body = objectMapper().writeValueAsString(digitalTwinPatch);
+                HttpResponse response = sendRequest(HttpMethod.PATCH, urlBuilder.toString(), body, ifMatch);
+                String responseBody = response.getBodyAsString().block();
+                throwIfError(response, responseBody);
+
+                DigitalTwinUpdateDigitalTwinHeaders headers = new DigitalTwinUpdateDigitalTwinHeaders();
+                headers.withETag(response.getHeaderValue("ETag"));
+                headers.withLocation(response.getHeaderValue("Location"));
+
+                return Observable.just(new ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders>(null, headers, response.getStatusCode()));
+            } catch (Throwable t) {
+                return Observable.error(t);
+            }
+        });
     }
 
-    private ServiceResponseWithHeaders<Void, DigitalTwinUpdateDigitalTwinHeaders> updateDigitalTwinDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<Void, RestException>newInstance(this.client.serializerAdapter())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .buildWithHeaders(response, DigitalTwinUpdateDigitalTwinHeaders.class);
-    }
+    // ========== invokeRootLevelCommand ==========
 
     /**
-     * Invoke a digital twin root level command.
      * Invoke a digital twin root level command.
      *
      * @param id the String value
      * @param commandName the String value
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
+     * @throws HttpResponseException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the Object object if successful.
      */
@@ -322,28 +284,12 @@ public class DigitalTwinsImpl implements DigitalTwins {
 
     /**
      * Invoke a digital twin root level command.
-     * Invoke a digital twin root level command.
-     *
-     * @param id the String value
-     * @param commandName the String value
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<Object> invokeRootLevelCommandAsync(String id, String commandName, final ServiceCallback<Object> serviceCallback) {
-        return ServiceFuture.fromHeaderResponse(invokeRootLevelCommandWithServiceResponseAsync(id, commandName), serviceCallback);
-    }
-
-    /**
-     * Invoke a digital twin root level command.
-     * Invoke a digital twin root level command.
      *
      * @param id the String value
      * @param commandName the String value
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Object object
      */
-    @SuppressWarnings({"Convert2Lambda", "Anonymous2MethodRef"})
     public Observable<Object> invokeRootLevelCommandAsync(String id, String commandName) {
         return invokeRootLevelCommandWithServiceResponseAsync(id, commandName).map(new Func1<ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders>, Object>() {
             @Override
@@ -355,38 +301,17 @@ public class DigitalTwinsImpl implements DigitalTwins {
 
     /**
      * Invoke a digital twin root level command.
-     * Invoke a digital twin root level command.
      *
      * @param id the String value
      * @param commandName the String value
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Object object
      */
-    @SuppressWarnings("Convert2Lambda")
     public Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders>> invokeRootLevelCommandWithServiceResponseAsync(String id, String commandName) {
-        if (id == null) {
-            throw new IllegalArgumentException("Parameter id is required and cannot be null.");
-        }
-        if (commandName == null) {
-            throw new IllegalArgumentException("Parameter commandName is required and cannot be null.");
-        }
-        final String apiVersion = "2020-09-30";
-        return service.invokeRootLevelCommand(id, commandName, null, apiVersion, null, null)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders>>>() {
-                @Override
-                public Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders> clientResponse = invokeRootLevelCommandDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return invokeRootLevelCommandWithServiceResponseAsync(id, commandName, null, null, null);
     }
 
     /**
-     * Invoke a digital twin root level command.
      * Invoke a digital twin root level command.
      *
      * @param id the String value
@@ -395,7 +320,7 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @param connectTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
      * @param responseTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
+     * @throws HttpResponseException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the Object object if successful.
      */
@@ -405,24 +330,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
 
     /**
      * Invoke a digital twin root level command.
-     * Invoke a digital twin root level command.
-     *
-     * @param id the String value
-     * @param commandName the String value
-     * @param payload the Object value
-     * @param connectTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
-     * @param responseTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<Object> invokeRootLevelCommandAsync(String id, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds, final ServiceCallback<Object> serviceCallback) {
-        return ServiceFuture.fromHeaderResponse(invokeRootLevelCommandWithServiceResponseAsync(id, commandName, payload, connectTimeoutInSeconds, responseTimeoutInSeconds), serviceCallback);
-    }
-
-    /**
-     * Invoke a digital twin root level command.
-     * Invoke a digital twin root level command.
      *
      * @param id the String value
      * @param commandName the String value
@@ -432,7 +339,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Object object
      */
-    @SuppressWarnings({"Convert2Lambda", "Anonymous2MethodRef"})
     public Observable<Object> invokeRootLevelCommandAsync(String id, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds) {
         return invokeRootLevelCommandWithServiceResponseAsync(id, commandName, payload, connectTimeoutInSeconds, responseTimeoutInSeconds).map(new Func1<ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders>, Object>() {
             @Override
@@ -444,7 +350,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
 
     /**
      * Invoke a digital twin root level command.
-     * Invoke a digital twin root level command.
      *
      * @param id the String value
      * @param commandName the String value
@@ -454,7 +359,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Object object
      */
-    @SuppressWarnings("Convert2Lambda")
     public Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders>> invokeRootLevelCommandWithServiceResponseAsync(String id, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds) {
         if (id == null) {
             throw new IllegalArgumentException("Parameter id is required and cannot be null.");
@@ -462,36 +366,45 @@ public class DigitalTwinsImpl implements DigitalTwins {
         if (commandName == null) {
             throw new IllegalArgumentException("Parameter commandName is required and cannot be null.");
         }
-        final String apiVersion = "2020-09-30";
-        return service.invokeRootLevelCommand(id, commandName, payload, apiVersion, connectTimeoutInSeconds, responseTimeoutInSeconds)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders>>>() {
-                @Override
-                public Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders> clientResponse = invokeRootLevelCommandDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
+        return Observable.defer(() -> {
+            try {
+                final String apiVersion = "2020-09-30";
+                StringBuilder urlBuilder = new StringBuilder(buildUrl("digitaltwins/" + id + "/commands/" + commandName));
+                appendQueryParam(urlBuilder, "api-version", apiVersion);
+                appendQueryParam(urlBuilder, "connectTimeoutInSeconds", connectTimeoutInSeconds);
+                appendQueryParam(urlBuilder, "responseTimeoutInSeconds", responseTimeoutInSeconds);
+
+                String requestBody = payload != null ? objectMapper().writeValueAsString(payload) : null;
+                HttpResponse response = sendRequest(HttpMethod.POST, urlBuilder.toString(), requestBody, null);
+                String responseBody = response.getBodyAsString().block();
+                throwIfError(response, responseBody);
+
+                Object body = (responseBody != null && !responseBody.isEmpty()) ? objectMapper().readValue(responseBody, Object.class) : null;
+
+                DigitalTwinInvokeRootLevelCommandHeaders headers = new DigitalTwinInvokeRootLevelCommandHeaders();
+                String statusCodeHeader = response.getHeaderValue("x-ms-command-statuscode");
+                if (statusCodeHeader != null) {
+                    headers.withXMsCommandStatuscode(Integer.parseInt(statusCodeHeader));
                 }
-            });
+                headers.withXMsRequestId(response.getHeaderValue("x-ms-request-id"));
+
+                return Observable.just(new ServiceResponseWithHeaders<>(body, headers, response.getStatusCode()));
+            } catch (Throwable t) {
+                return Observable.error(t);
+            }
+        });
     }
 
-    private ServiceResponseWithHeaders<Object, DigitalTwinInvokeRootLevelCommandHeaders> invokeRootLevelCommandDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<Object>() { }.getType())
-                .buildWithHeaders(response, DigitalTwinInvokeRootLevelCommandHeaders.class);
-    }
+    // ========== invokeComponentCommand ==========
 
     /**
-     * Invoke a digital twin command.
      * Invoke a digital twin command.
      *
      * @param id the String value
      * @param componentPath the String value
      * @param commandName the String value
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
+     * @throws HttpResponseException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the Object object if successful.
      */
@@ -501,22 +414,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
 
     /**
      * Invoke a digital twin command.
-     * Invoke a digital twin command.
-     *
-     * @param id the String value
-     * @param componentPath the String value
-     * @param commandName the String value
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<Object> invokeComponentCommandAsync(String id, String componentPath, String commandName, final ServiceCallback<Object> serviceCallback) {
-        return ServiceFuture.fromHeaderResponse(invokeComponentCommandWithServiceResponseAsync(id, componentPath, commandName), serviceCallback);
-    }
-
-    /**
-     * Invoke a digital twin command.
-     * Invoke a digital twin command.
      *
      * @param id the String value
      * @param componentPath the String value
@@ -524,7 +421,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Object object
      */
-    @SuppressWarnings({"Convert2Lambda", "Anonymous2MethodRef"})
     public Observable<Object> invokeComponentCommandAsync(String id, String componentPath, String commandName) {
         return invokeComponentCommandWithServiceResponseAsync(id, componentPath, commandName).map(new Func1<ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders>, Object>() {
             @Override
@@ -536,7 +432,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
 
     /**
      * Invoke a digital twin command.
-     * Invoke a digital twin command.
      *
      * @param id the String value
      * @param componentPath the String value
@@ -544,34 +439,11 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Object object
      */
-    @SuppressWarnings("Convert2Lambda")
     public Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders>> invokeComponentCommandWithServiceResponseAsync(String id, String componentPath, String commandName) {
-        if (id == null) {
-            throw new IllegalArgumentException("Parameter id is required and cannot be null.");
-        }
-        if (componentPath == null) {
-            throw new IllegalArgumentException("Parameter componentPath is required and cannot be null.");
-        }
-        if (commandName == null) {
-            throw new IllegalArgumentException("Parameter commandName is required and cannot be null.");
-        }
-        final String apiVersion = "2020-09-30";
-        return service.invokeComponentCommand(id, componentPath, commandName, null, apiVersion, null, null)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders>>>() {
-                @Override
-                public Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders> clientResponse = invokeComponentCommandDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return invokeComponentCommandWithServiceResponseAsync(id, componentPath, commandName, null, null, null);
     }
 
     /**
-     * Invoke a digital twin command.
      * Invoke a digital twin command.
      *
      * @param id the String value
@@ -581,7 +453,7 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @param connectTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
      * @param responseTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
+     * @throws HttpResponseException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the Object object if successful.
      */
@@ -591,25 +463,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
 
     /**
      * Invoke a digital twin command.
-     * Invoke a digital twin command.
-     *
-     * @param id the String value
-     * @param componentPath the String value
-     * @param commandName the String value
-     * @param payload the Object value
-     * @param connectTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
-     * @param responseTimeoutInSeconds Maximum interval of time, in seconds, that the digital twin command will wait for the answer.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<Object> invokeComponentCommandAsync(String id, String componentPath, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds, final ServiceCallback<Object> serviceCallback) {
-        return ServiceFuture.fromHeaderResponse(invokeComponentCommandWithServiceResponseAsync(id, componentPath, commandName, payload, connectTimeoutInSeconds, responseTimeoutInSeconds), serviceCallback);
-    }
-
-    /**
-     * Invoke a digital twin command.
-     * Invoke a digital twin command.
      *
      * @param id the String value
      * @param componentPath the String value
@@ -620,7 +473,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Object object
      */
-    @SuppressWarnings({"Convert2Lambda", "Anonymous2MethodRef"})
     public Observable<Object> invokeComponentCommandAsync(String id, String componentPath, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds) {
         return invokeComponentCommandWithServiceResponseAsync(id, componentPath, commandName, payload, connectTimeoutInSeconds, responseTimeoutInSeconds).map(new Func1<ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders>, Object>() {
             @Override
@@ -632,7 +484,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
 
     /**
      * Invoke a digital twin command.
-     * Invoke a digital twin command.
      *
      * @param id the String value
      * @param componentPath the String value
@@ -643,7 +494,6 @@ public class DigitalTwinsImpl implements DigitalTwins {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Object object
      */
-    @SuppressWarnings("Convert2Lambda")
     public Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders>> invokeComponentCommandWithServiceResponseAsync(String id, String componentPath, String commandName, Object payload, Integer connectTimeoutInSeconds, Integer responseTimeoutInSeconds) {
         if (id == null) {
             throw new IllegalArgumentException("Parameter id is required and cannot be null.");
@@ -654,25 +504,33 @@ public class DigitalTwinsImpl implements DigitalTwins {
         if (commandName == null) {
             throw new IllegalArgumentException("Parameter commandName is required and cannot be null.");
         }
-        final String apiVersion = "2020-09-30";
-        return service.invokeComponentCommand(id, componentPath, commandName, payload, apiVersion, connectTimeoutInSeconds, responseTimeoutInSeconds)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders>>>() {
-                @Override
-                public Observable<ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders> clientResponse = invokeComponentCommandDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
+        return Observable.defer(() -> {
+            try {
+                final String apiVersion = "2020-09-30";
+                StringBuilder urlBuilder = new StringBuilder(buildUrl("digitaltwins/" + id + "/components/" + componentPath + "/commands/" + commandName));
+                appendQueryParam(urlBuilder, "api-version", apiVersion);
+                appendQueryParam(urlBuilder, "connectTimeoutInSeconds", connectTimeoutInSeconds);
+                appendQueryParam(urlBuilder, "responseTimeoutInSeconds", responseTimeoutInSeconds);
 
-    private ServiceResponseWithHeaders<Object, DigitalTwinInvokeComponentCommandHeaders> invokeComponentCommandDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<Object>() { }.getType())
-                .buildWithHeaders(response, DigitalTwinInvokeComponentCommandHeaders.class);
+                String requestBody = payload != null ? objectMapper().writeValueAsString(payload) : null;
+                HttpResponse response = sendRequest(HttpMethod.POST, urlBuilder.toString(), requestBody, null);
+                String responseBody = response.getBodyAsString().block();
+                throwIfError(response, responseBody);
+
+                Object body = (responseBody != null && !responseBody.isEmpty()) ? objectMapper().readValue(responseBody, Object.class) : null;
+
+                DigitalTwinInvokeComponentCommandHeaders headers = new DigitalTwinInvokeComponentCommandHeaders();
+                String statusCodeHeader = response.getHeaderValue("x-ms-command-statuscode");
+                if (statusCodeHeader != null) {
+                    headers.withXMsCommandStatuscode(Integer.parseInt(statusCodeHeader));
+                }
+                headers.withXMsRequestId(response.getHeaderValue("x-ms-request-id"));
+
+                return Observable.just(new ServiceResponseWithHeaders<>(body, headers, response.getStatusCode()));
+            } catch (Throwable t) {
+                return Observable.error(t);
+            }
+        });
     }
 
 }
