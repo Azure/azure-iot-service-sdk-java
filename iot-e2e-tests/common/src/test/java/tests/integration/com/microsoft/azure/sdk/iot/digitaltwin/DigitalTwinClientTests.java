@@ -19,8 +19,8 @@ import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
 import com.microsoft.azure.sdk.iot.service.registry.Device;
 import com.microsoft.azure.sdk.iot.service.registry.RegistryClient;
 import com.microsoft.azure.sdk.iot.service.registry.RegistryClientOptions;
-import com.microsoft.rest.RestException;
-import com.microsoft.rest.ServiceResponseWithHeaders;
+import com.azure.core.exception.HttpResponseException;
+import com.microsoft.azure.sdk.iot.service.digitaltwin.models.ServiceResponseWithHeaders;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.*;
 import org.junit.rules.Timeout;
@@ -253,9 +253,9 @@ public class DigitalTwinClientTests extends IntegrationTest
             digitalTwinClient.getDigitalTwin(deviceId, BasicDigitalTwin.class);
             fail("Expected get digital twin call to throw unauthorized exception since an expired SAS token was used, but no exception was thrown");
         }
-        catch (RestException e)
+        catch (HttpResponseException e)
         {
-            if (e.response().code() == 401)
+            if (e.getResponse().getStatusCode() == 401)
             {
                 log.debug("IotHubUnauthorizedException was thrown as expected, continuing test");
             }
