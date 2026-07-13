@@ -248,10 +248,7 @@ public class FileUploadNotificationProcessorClient
 
         log.debug("Opening FileUploadNotificationProcessorClient");
 
-        this.reactorRunner = new ReactorRunner(
-            this.hostName,
-            "FileUploadNotificationProcessor",
-            this.eventReceivingConnectionHandler);
+        this.reactorRunner = new ReactorRunner(this.eventReceivingConnectionHandler);
 
         final CountDownLatch openLatch = new CountDownLatch(1);
         this.eventReceivingConnectionHandler.setOnConnectionOpenedCallback(openLatch::countDown);

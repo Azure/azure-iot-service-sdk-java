@@ -259,10 +259,7 @@ public final class MessagingClient
 
         log.debug("Opening MessagingClient");
 
-        this.reactorRunner = new ReactorRunner(
-            this.hostName,
-            "MessagingClient",
-            this.cloudToDeviceMessageConnectionHandler);
+        this.reactorRunner = new ReactorRunner(this.cloudToDeviceMessageConnectionHandler);
 
         final CountDownLatch openLatch = new CountDownLatch(1);
         this.cloudToDeviceMessageConnectionHandler.setOnConnectionOpenedCallback(openLatch::countDown);
