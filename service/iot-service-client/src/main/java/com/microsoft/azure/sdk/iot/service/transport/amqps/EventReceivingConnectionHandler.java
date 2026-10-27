@@ -18,6 +18,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.qpid.proton.amqp.Symbol;
 import org.apache.qpid.proton.amqp.messaging.Source;
+import org.apache.qpid.proton.engine.EndpointState;
 import org.apache.qpid.proton.engine.Event;
 import org.apache.qpid.proton.engine.Receiver;
 import org.apache.qpid.proton.engine.Session;
@@ -103,9 +104,10 @@ public class EventReceivingConnectionHandler extends AmqpConnectionHandler imple
     @Override
     public void onAuthenticationSucceeded()
     {
-        // Only open the session and receiver link if this authentication was for the first open. This callback
-        // will be executed again after every proactive renewal, but nothing needs to be done after a proactive renewal
-        if (fileUploadNotificationReceiverLinkHandler == null)
+        // Only open the session and receiver links for the first authentication on this connection. This callback
+        // will be executed again after every proactive renewal, but nothing needs to be done after a proactive renewal.
+        // Links left over from a previous connection must not be reused, since they can never open again.
+        if (this.session == null || this.session.getConnection() != this.connection)
         {
             // Every session or link could have their own handler(s) if we
             // wanted simply by adding the handler to the given session
@@ -174,6 +176,23 @@ public class EventReceivingConnectionHandler extends AmqpConnectionHandler imple
     }
 
     @Override
+    public boolean isOpen()
+    {
+        return super.isOpen()
+            && this.session != null
+            && this.session.getLocalState() == EndpointState.ACTIVE
+            && this.session.getRemoteState() == EndpointState.ACTIVE
+            && isReceiverLinkOpen(this.fileUploadNotificationReceivedCallback, this.fileUploadNotificationReceiverLinkHandler)
+            && isReceiverLinkOpen(this.messageFeedbackReceivedCallback, this.messageFeedbackReceiverLinkHandler);
+    }
+
+    private static boolean isReceiverLinkOpen(Object receivedCallback, ReceiverLinkHandler receiverLinkHandler)
+    {
+        // A receiver link is only opened when its callback was provided
+        return receivedCallback == null || (receiverLinkHandler != null && receiverLinkHandler.isOpen());
+    }
+
+    @Override
     public void closeAsync(Runnable onConnectionClosedCallback)
     {
         if (this.session != null)
@@ -200,7 +219,12 @@ public class EventReceivingConnectionHandler extends AmqpConnectionHandler imple
     @Override
     public void onReactorFinal(Event event)
     {
-        this.messageFeedbackReceiverLinkHandler = null;
-        this.fileUploadNotificationReceiverLinkHandler = null;
+        // A previous reactor may finish after a new reactor has already opened new links, so only clear the link
+        // handlers if they belong to the reactor that is finishing.
+        if (this.session == null || this.session.getConnection().getReactor() == event.getReactor())
+        {
+            this.messageFeedbackReceiverLinkHandler = null;
+            this.fileUploadNotificationReceiverLinkHandler = null;
+        }
     }
 }

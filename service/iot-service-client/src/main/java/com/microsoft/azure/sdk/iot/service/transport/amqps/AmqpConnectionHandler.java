@@ -165,6 +165,9 @@ abstract class AmqpConnectionHandler extends ErrorLoggingBaseHandlerWithCleanup 
     @Override
     public void onReactorInit(Event event)
     {
+        // Clear any error saved from a previous connection so that it isn't reported for this new connection
+        this.protonJExceptionParser = null;
+
         Reactor reactor = event.getReactor();
 
         if (this.protocol == IotHubServiceClientProtocol.AMQPS_WS)
@@ -361,5 +364,36 @@ abstract class AmqpConnectionHandler extends ErrorLoggingBaseHandlerWithCleanup 
     public void onAuthenticationFailed(IotHubException e)
     {
         this.protonJExceptionParser = new ProtonJExceptionParser(e);
+    }
+
+    @Override
+    public void onLinkRemoteClosedUnexpectedly(Event event, String linkInstanceType)
+    {
+        Connection eventConnection = event.getConnection();
+        if (eventConnection == null || eventConnection.getLocalState() != EndpointState.ACTIVE)
+        {
+            // The connection is already closing, so this link closure is expected and was either already reported or
+            // was caused by the user closing the client.
+            log.trace("Amqp {} link closed remotely while the connection was already closing", linkInstanceType);
+            return;
+        }
+
+        ProtonJExceptionParser exceptionParser = new ProtonJExceptionParser(event);
+        if (exceptionParser.getIotHubException() == null && exceptionParser.getNetworkException() == null)
+        {
+            // The service may detach a link without an error condition, such as when the connection's token has expired.
+            exceptionParser = new ProtonJExceptionParser(
+                new IOException(String.format("The amqp %s link was closed or detached by the service", linkInstanceType)));
+        }
+
+        log.error("Amqp {} link was closed or detached by the service. Closing the amqp connection.", linkInstanceType);
+
+        this.protonJExceptionParser = exceptionParser;
+        this.processError();
+
+        // The service may keep the connection open after detaching its links, so close it locally. This stops the
+        // reactor once the service acknowledges the close, which lets the client report that it is closed and lets the
+        // user re-open it with a new connection.
+        eventConnection.close();
     }
 }

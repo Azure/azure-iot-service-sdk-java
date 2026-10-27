@@ -101,6 +101,14 @@ public class ErrorLoggingBaseHandler extends BaseHandler
     @Override
     public void onTransportError(Event event)
     {
+        if (event.getConnection() != null && event.getConnection().getLocalState() == EndpointState.CLOSED)
+        {
+            // This client already started closing the connection (either because the user closed it, or because an
+            // error was already reported), so the peer dropping the transport is expected and isn't a new error.
+            log.debug("Amqp transport closed while the amqp connection was already closing locally");
+            return;
+        }
+
         protonJExceptionParser = new ProtonJExceptionParser(event);
         if (protonJExceptionParser.getError() == null)
         {
@@ -114,7 +122,7 @@ public class ErrorLoggingBaseHandler extends BaseHandler
         this.processError();
     }
 
-    private void processError()
+    protected void processError()
     {
         if (this.errorProcessor != null)
         {

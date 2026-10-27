@@ -127,11 +127,32 @@ abstract class ReceiverLinkHandler extends BaseHandler
         {
             log.debug("{} receiver link with link correlation id {} was closed remotely unexpectedly", getLinkInstanceType(), this.linkCorrelationId);
             link.close();
+            this.linkStateCallback.onLinkRemoteClosedUnexpectedly(event, getLinkInstanceType());
         }
         else
         {
             log.trace("Closing amqp session now that this {} receiver link with link correlation id {} has closed remotely and locally", getLinkInstanceType(), linkCorrelationId);
             event.getSession().close();
+        }
+    }
+
+    @Override
+    public void onLinkRemoteDetach(Event event)
+    {
+        // The service sent a detach frame with closed=false. Proton-j reports this as a remote detach rather than a
+        // remote close, but the link can no longer be used either way.
+        Link link = event.getLink();
+        if (link.getLocalState() == EndpointState.ACTIVE && !link.detached())
+        {
+            log.debug("{} receiver link with link correlation id {} was detached remotely unexpectedly", getLinkInstanceType(), this.linkCorrelationId);
+
+            // Respond with a non-closing detach as required by the AMQP spec
+            link.detach();
+            this.linkStateCallback.onLinkRemoteClosedUnexpectedly(event, getLinkInstanceType());
+        }
+        else
+        {
+            log.trace("{} receiver link with link correlation id {} was detached remotely after being closed locally", getLinkInstanceType(), this.linkCorrelationId);
         }
     }
 
@@ -148,6 +169,13 @@ abstract class ReceiverLinkHandler extends BaseHandler
         {
             log.trace("{} receiver link with correlation id {} was closed locally", this.getLinkInstanceType(), this.linkCorrelationId);
         }
+    }
+
+    boolean isOpen()
+    {
+        return this.receiverLink != null
+            && this.receiverLink.getLocalState() == EndpointState.ACTIVE
+            && this.receiverLink.getRemoteState() == EndpointState.ACTIVE;
     }
 
     void close()

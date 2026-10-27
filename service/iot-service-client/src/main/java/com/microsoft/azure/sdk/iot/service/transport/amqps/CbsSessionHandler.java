@@ -166,6 +166,13 @@ class CbsSessionHandler extends ErrorLoggingBaseHandlerWithCleanup implements Au
     }
 
     @Override
+    public void onLinkRemoteClosedUnexpectedly(Event event, String linkInstanceType)
+    {
+        // Losing either CBS link means the connection can no longer be authenticated, so let the connection handler tear it down
+        this.cbsSessionStateCallback.onLinkRemoteClosedUnexpectedly(event, linkInstanceType);
+    }
+
+    @Override
     public void onTimerTask(Event event)
     {
         // Timer task is executed periodically to send a proactively renewed authentication token in order to keep the connection alive
@@ -203,8 +210,10 @@ class CbsSessionHandler extends ErrorLoggingBaseHandlerWithCleanup implements Au
         // in this CBS session's case, only one message should ever be sent, so as long
         // as the delivery tag is not -1 (proton's failure case) then it is safe to ignore
 
-        // Connection only proactively renews when a token provider is present
-        if (this.credential != null || this.sasTokenProvider != null)
+        // Every authentication mode can produce a new token: token credentials and SAS credentials are asked for a new
+        // token, and connection strings are used to sign a new SAS token. Proactively renew in all cases so that the
+        // service does not detach this connection's links once the current token expires.
+        if (this.credential != null || this.sasTokenProvider != null || this.connectionString != null)
         {
             // Each execution of onTimerTask is responsible for scheduling the next occurrence based on how long the previous token is valid for
             OffsetDateTime currentOffsetDateTime = OffsetDateTime.now();

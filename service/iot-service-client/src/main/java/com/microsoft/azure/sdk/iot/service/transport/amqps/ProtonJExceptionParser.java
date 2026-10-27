@@ -54,8 +54,20 @@ public class ProtonJExceptionParser
         this.networkException = null;
     }
 
+    public ProtonJExceptionParser(IOException networkException)
+    {
+        this.iotHubException = null;
+        this.networkException = networkException;
+    }
+
     private static IotHubException getIotHubException(String error, String errorDescription)
     {
+        if (error == null)
+        {
+            // The endpoint was closed or detached without an error condition
+            return null;
+        }
+
         switch (error)
         {
             case IotHubUnauthorizedException.amqpErrorCode:
@@ -88,7 +100,7 @@ public class ProtonJExceptionParser
     private static IOException getNetworkException(String error, String errorDescription)
     {
         // all proton IO exceptions use this error code. If it isn't present, then it is likely an IoT Hub level error code instead
-        if (error.equals("proton:io"))
+        if ("proton:io".equals(error))
         {
             return new IOException(errorDescription);
         }
