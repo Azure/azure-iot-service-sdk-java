@@ -8,6 +8,7 @@ package com.microsoft.azure.sdk.iot.service.messaging;
 import com.microsoft.azure.sdk.iot.service.auth.IotHubConnectionString;
 import com.microsoft.azure.sdk.iot.service.auth.IotHubServiceSasToken;
 import com.microsoft.azure.sdk.iot.service.transport.amqps.CloudToDeviceMessageConnectionHandler;
+import com.microsoft.azure.sdk.iot.service.transport.amqps.ReactorRunner;
 import mockit.*;
 import org.junit.Test;
 
@@ -17,6 +18,35 @@ public class MessagingClientTest
     CloudToDeviceMessageConnectionHandler amqpSend;
     @Mocked
     IotHubServiceSasToken iotHubServiceSasToken;
+    @Mocked
+    ReactorRunner mockReactorRunner;
+
+    @Test
+    public void openReleasesPreviousConnectionThatWasLostBeforeOpeningNewOne() throws Exception
+    {
+        // Arrange
+        MessagingClient messagingClient = new MessagingClient("HostName=aaa.bbb.ccc;SharedAccessKeyName=XXX;SharedAccessKey=YYY", IotHubServiceClientProtocol.AMQPS);
+        Deencapsulation.setField(messagingClient, "reactorRunner", mockReactorRunner);
+        new Expectations()
+        {
+            {
+                // the previous connection was lost, so the client is no longer open
+                mockReactorRunner.isRunning(); result = false;
+            }
+        };
+
+        // Act
+        messagingClient.open(10000);
+
+        // Assert
+        new Verifications()
+        {
+            {
+                mockReactorRunner.stop(anyInt);
+                times = 1;
+            }
+        };
+    }
 
     // Tests_SRS_SERVICE_SDK_JAVA_SERVICECLIENT_12_001: [The constructor shall throw IllegalArgumentException if the input string is empty or null]
     // Assert

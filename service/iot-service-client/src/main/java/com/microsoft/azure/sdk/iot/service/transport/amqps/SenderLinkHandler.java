@@ -9,6 +9,7 @@ import org.apache.qpid.proton.amqp.Symbol;
 import org.apache.qpid.proton.amqp.messaging.Target;
 import org.apache.qpid.proton.amqp.transport.SenderSettleMode;
 import org.apache.qpid.proton.engine.BaseHandler;
+import org.apache.qpid.proton.engine.Connection;
 import org.apache.qpid.proton.engine.Delivery;
 import org.apache.qpid.proton.engine.EndpointState;
 import org.apache.qpid.proton.engine.Event;
@@ -94,11 +95,32 @@ abstract class SenderLinkHandler extends BaseHandler
         {
             log.debug("{} sender link with link correlation id {} was closed remotely unexpectedly", getLinkInstanceType(), this.linkCorrelationId);
             link.close();
+            this.linkStateCallback.onLinkRemoteClosedUnexpectedly(event, getLinkInstanceType());
         }
         else
         {
             log.trace("Closing amqp session now that this {} sender link with link correlation id {} has closed remotely and locally", getLinkInstanceType(), linkCorrelationId);
             event.getSession().close();
+        }
+    }
+
+    @Override
+    public void onLinkRemoteDetach(Event event)
+    {
+        // The service sent a detach frame with closed=false. Proton-j reports this as a remote detach rather than a
+        // remote close, but the link can no longer be used either way.
+        Link link = event.getLink();
+        if (link.getLocalState() == EndpointState.ACTIVE && !link.detached())
+        {
+            log.debug("{} sender link with link correlation id {} was detached remotely unexpectedly", getLinkInstanceType(), this.linkCorrelationId);
+
+            // Respond with a non-closing detach as required by the AMQP spec
+            link.detach();
+            this.linkStateCallback.onLinkRemoteClosedUnexpectedly(event, getLinkInstanceType());
+        }
+        else
+        {
+            log.trace("{} sender link with link correlation id {} was detached remotely after being closed locally", getLinkInstanceType(), this.linkCorrelationId);
         }
     }
 
@@ -122,6 +144,11 @@ abstract class SenderLinkHandler extends BaseHandler
         return this.senderLink != null
             && this.senderLink.getLocalState() == EndpointState.ACTIVE
             && this.senderLink.getRemoteState() == EndpointState.ACTIVE;
+    }
+
+    boolean belongsTo(Connection connection)
+    {
+        return this.senderLink.getSession().getConnection() == connection;
     }
 
     void close()

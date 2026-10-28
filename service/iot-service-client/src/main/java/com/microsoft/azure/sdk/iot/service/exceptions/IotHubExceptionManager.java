@@ -28,7 +28,7 @@ public class IotHubExceptionManager
      * @throws IotHubBadGatewayException This exception is thrown if the response status equal 502
      * @throws IotHubServerBusyException This exception is thrown if the response status equal 503
      * @throws IotHubGatewayTimeoutException This exception is thrown if the response status equal 504
-     * @throws IotHubException This exception is thrown if the response status none of them above and greater then 300
+     * @throws IotHubException This exception is thrown if the response status none of them above and greater than 300
      */
     public static void httpResponseVerification(HttpResponse httpResponse)
             throws 

@@ -248,6 +248,15 @@ public class FileUploadNotificationProcessorClient
 
         log.debug("Opening FileUploadNotificationProcessorClient");
 
+        if (this.reactorRunner != null)
+        {
+            // The previous connection was lost without this client being stopped. Release it before opening a new
+            // connection so that the old and new connections don't share the connection handler's state.
+            log.debug("Releasing the previous FileUploadNotificationProcessorClient connection before opening a new one");
+            this.reactorRunner.stop(STOP_REACTOR_TIMEOUT_MILLISECONDS);
+            this.reactorRunner = null;
+        }
+
         this.reactorRunner = new ReactorRunner(
             this.hostName,
             "FileUploadNotificationProcessor",

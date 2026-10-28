@@ -85,9 +85,10 @@ public class CloudToDeviceMessageConnectionHandler extends AmqpConnectionHandler
     @Override
     public void onAuthenticationSucceeded()
     {
-        // Only open the session and sending link if this authentication was for the first open. This callback
-        // will be executed again after every proactive renewal, but nothing needs to be done after a proactive renewal
-        if (this.cloudToDeviceMessageSenderLinkHandler == null)
+        // Only open the session and sending link for the first authentication on this connection. This callback
+        // will be executed again after every proactive renewal, but nothing needs to be done after a proactive renewal.
+        // A link left over from a previous connection must not be reused, since it can never open again.
+        if (this.session == null || this.session.getConnection() != this.connection)
         {
             // Every session or link could have their own handler(s) if we
             // wanted simply by adding the handler to the given session
@@ -133,6 +134,20 @@ public class CloudToDeviceMessageConnectionHandler extends AmqpConnectionHandler
         // no action needed. This connection doesn't open any receiver links other than the CBS link which is handled elsewhere.
     }
 
+    @Override
+    public void onLinkRemoteClosedUnexpectedly(Event event, String linkInstanceType)
+    {
+        super.onLinkRemoteClosedUnexpectedly(event, linkInstanceType);
+
+        if (this.cloudToDeviceMessageSenderLinkHandler != null
+            && this.cloudToDeviceMessageSenderLinkHandler.belongsTo(event.getConnection()))
+        {
+            // Queued and unacknowledged messages can't be sent or acknowledged on this connection anymore, so complete
+            // their callbacks with an error now rather than leaving them waiting.
+            this.cloudToDeviceMessageSenderLinkHandler.close();
+        }
+    }
+
     public boolean isOpen()
     {
         return super.isOpen()
@@ -174,6 +189,11 @@ public class CloudToDeviceMessageConnectionHandler extends AmqpConnectionHandler
     @Override
     public void onReactorFinal(Event event)
     {
-        this.cloudToDeviceMessageSenderLinkHandler = null;
+        // A previous reactor may finish after a new reactor has already opened a new link, so only clear the link
+        // handler if it belongs to the reactor that is finishing.
+        if (this.session == null || this.session.getConnection().getReactor() == event.getReactor())
+        {
+            this.cloudToDeviceMessageSenderLinkHandler = null;
+        }
     }
 }

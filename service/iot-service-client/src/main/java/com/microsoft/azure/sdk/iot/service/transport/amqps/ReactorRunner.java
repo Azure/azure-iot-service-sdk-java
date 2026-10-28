@@ -25,6 +25,9 @@ public class ReactorRunner
     private static final int MAX_FRAME_SIZE = 4 * 1024;
     private final AmqpConnectionHandler handler;
 
+    // Counted down once the connection has closed gracefully or the reactor thread has finished, whichever happens first
+    private final CountDownLatch reactorClosedLatch = new CountDownLatch(1);
+
     public ReactorRunner(AmqpConnectionHandler handler) throws IOException
     {
         this(null, null, handler);
@@ -66,6 +69,7 @@ public class ReactorRunner
         {
             log.trace("Freeing reactor now that reactor thread is done");
             this.reactor.free();
+            this.reactorClosedLatch.countDown();
         }
 
         log.trace("Finished reactor thread {}", this.threadName);
@@ -78,14 +82,23 @@ public class ReactorRunner
             throw new IllegalArgumentException("timeoutMilliseconds must greater than or equal to 0");
         }
 
+        if (this.reactorClosedLatch.getCount() == 0)
+        {
+            // The reactor already stopped on its own, such as after the service closed the connection. There is
+            // no connection left to close gracefully, and waiting for one to close would only block until the timeout.
+            log.trace("Reactor thread {} has already finished, so there is nothing to stop", this.threadName);
+            return;
+        }
+
         try
         {
-            final CountDownLatch onReactorClosedLatch = new CountDownLatch(1);
-            this.handler.closeAsync(() -> onReactorClosedLatch.countDown());
+            // The connection may already be closing (for instance, after the service detached its links), in which
+            // case the close callback may never run. The reactor thread finishing also releases this latch.
+            this.handler.closeAsync(this.reactorClosedLatch::countDown);
 
             if (timeoutMilliseconds > 0)
             {
-                boolean timedOut = !onReactorClosedLatch.await(timeoutMilliseconds, TimeUnit.MILLISECONDS);
+                boolean timedOut = !this.reactorClosedLatch.await(timeoutMilliseconds, TimeUnit.MILLISECONDS);
 
                 if (timedOut)
                 {
@@ -94,7 +107,7 @@ public class ReactorRunner
             }
             else
             {
-                onReactorClosedLatch.await(); // wait indefinitely
+                this.reactorClosedLatch.await(); // wait indefinitely
             }
         }
         finally

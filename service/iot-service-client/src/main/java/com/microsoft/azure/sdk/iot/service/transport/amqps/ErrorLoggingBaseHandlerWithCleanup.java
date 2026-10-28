@@ -71,6 +71,17 @@ public class ErrorLoggingBaseHandlerWithCleanup extends ErrorLoggingBaseHandler
     }
 
     @Override
+    public void onTransportClosed(Event event)
+    {
+        super.onTransportClosed(event);
+
+        // Nothing else can happen on this connection once its transport has closed. Stop the reactor now rather than
+        // leaving it running indefinitely for any scheduled timer tasks such as proactive token renewal.
+        log.trace("Stopping reactor now that the amqp transport is closed");
+        event.getReactor().stop();
+    }
+
+    @Override
     public void onLinkRemoteOpen(Event event)
     {
         super.onLinkRemoteOpen(event);

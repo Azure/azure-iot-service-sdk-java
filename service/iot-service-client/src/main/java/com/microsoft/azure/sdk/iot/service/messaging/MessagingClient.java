@@ -259,6 +259,15 @@ public final class MessagingClient
 
         log.debug("Opening MessagingClient");
 
+        if (this.reactorRunner != null)
+        {
+            // The previous connection was lost without this client being closed. Release it before opening a new
+            // connection so that the old and new connections don't share the connection handler's state.
+            log.debug("Releasing the previous MessagingClient connection before opening a new one");
+            this.reactorRunner.stop(STOP_REACTOR_TIMEOUT_MILLISECONDS);
+            this.reactorRunner = null;
+        }
+
         this.reactorRunner = new ReactorRunner(
             this.hostName,
             "MessagingClient",
