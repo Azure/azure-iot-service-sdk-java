@@ -13,7 +13,7 @@ import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinCommand
 import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinInvokeCommandHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinInvokeCommandRequestOptions;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinUpdateRequestOptions;
-import com.microsoft.rest.ServiceResponseWithHeaders;
+import com.microsoft.azure.sdk.iot.service.digitaltwin.models.ServiceResponseWithHeaders;
 
 import java.util.List;
 

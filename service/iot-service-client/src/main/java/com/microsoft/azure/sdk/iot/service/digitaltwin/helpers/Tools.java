@@ -15,7 +15,7 @@ import com.microsoft.azure.sdk.iot.service.digitaltwin.customized.DigitalTwinGet
 import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinInvokeCommandHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.customized.DigitalTwinUpdateHeaders;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
-import com.microsoft.rest.ServiceResponseWithHeaders;
+import com.microsoft.azure.sdk.iot.service.digitaltwin.models.ServiceResponseWithHeaders;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -25,7 +25,7 @@ public final class Tools {
     public static final Func1<ServiceResponseWithHeaders<Object, DigitalTwinGetDigitalTwinHeaders>, Observable<ServiceResponseWithHeaders<Object, DigitalTwinGetHeaders>>> FUNC_TO_DIGITAL_TWIN_GET_RESPONSE = object -> {
         DigitalTwinGetHeaders digitalTwinGetHeaders = new DigitalTwinGetHeaders();
         digitalTwinGetHeaders.withETag(object.headers().eTag());
-        ServiceResponseWithHeaders<Object, DigitalTwinGetHeaders> result = new ServiceResponseWithHeaders<>(object.body(), digitalTwinGetHeaders, object.response());
+        ServiceResponseWithHeaders<Object, DigitalTwinGetHeaders> result = new ServiceResponseWithHeaders<>(object.body(), digitalTwinGetHeaders, object.statusCode());
         return Observable.just(result);
     };
 
@@ -33,7 +33,7 @@ public final class Tools {
         DigitalTwinUpdateHeaders digitalTwinUpdateHeaders = new DigitalTwinUpdateHeaders();
         digitalTwinUpdateHeaders.withETag(object.headers().eTag());
         digitalTwinUpdateHeaders.withLocation(object.headers().location());
-        ServiceResponseWithHeaders<Void, DigitalTwinUpdateHeaders> result = new ServiceResponseWithHeaders<>(object.body(), digitalTwinUpdateHeaders, object.response());
+        ServiceResponseWithHeaders<Void, DigitalTwinUpdateHeaders> result = new ServiceResponseWithHeaders<>(object.body(), digitalTwinUpdateHeaders, object.statusCode());
         return Observable.just(result);
     };
 
@@ -44,7 +44,7 @@ public final class Tools {
             digitalTwinCommandResponse.setStatus(object.headers().xMsCommandStatuscode());
             DigitalTwinInvokeCommandHeaders digitalTwinInvokeCommandHeaders = new DigitalTwinInvokeCommandHeaders();
             digitalTwinInvokeCommandHeaders.setRequestId(object.headers().xMsRequestId());
-            ServiceResponseWithHeaders<DigitalTwinCommandResponse, DigitalTwinInvokeCommandHeaders> result = new ServiceResponseWithHeaders<>(digitalTwinCommandResponse, digitalTwinInvokeCommandHeaders, object.response());
+            ServiceResponseWithHeaders<DigitalTwinCommandResponse, DigitalTwinInvokeCommandHeaders> result = new ServiceResponseWithHeaders<>(digitalTwinCommandResponse, digitalTwinInvokeCommandHeaders, object.statusCode());
             return Observable.just(result);
         }
         catch (JsonProcessingException e) {
@@ -60,7 +60,7 @@ public final class Tools {
             digitalTwinCommandResponse.setStatus(object.headers().xMsCommandStatuscode());
             DigitalTwinInvokeCommandHeaders digitalTwinInvokeCommandHeaders = new DigitalTwinInvokeCommandHeaders();
             digitalTwinInvokeCommandHeaders.setRequestId(object.headers().xMsRequestId());
-            ServiceResponseWithHeaders<DigitalTwinCommandResponse, DigitalTwinInvokeCommandHeaders> result = new ServiceResponseWithHeaders<>(digitalTwinCommandResponse, digitalTwinInvokeCommandHeaders, object.response());
+            ServiceResponseWithHeaders<DigitalTwinCommandResponse, DigitalTwinInvokeCommandHeaders> result = new ServiceResponseWithHeaders<>(digitalTwinCommandResponse, digitalTwinInvokeCommandHeaders, object.statusCode());
             return Observable.just(result);
         }
         catch (JsonProcessingException e) {

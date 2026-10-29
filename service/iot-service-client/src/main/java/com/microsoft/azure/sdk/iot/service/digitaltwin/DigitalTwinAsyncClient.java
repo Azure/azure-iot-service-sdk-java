@@ -5,11 +5,12 @@ package com.microsoft.azure.sdk.iot.service.digitaltwin;
 
 import com.azure.core.credential.AzureSasCredential;
 import com.azure.core.credential.TokenCredential;
+import com.azure.core.http.HttpPipeline;
+import com.azure.core.http.HttpPipelineBuilder;
+import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.microsoft.azure.sdk.iot.service.ProxyOptions;
-import com.microsoft.azure.sdk.iot.service.auth.TokenCredentialCache;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.authentication.BearerTokenProvider;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.authentication.SasTokenProvider;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.authentication.ServiceClientBearerTokenCredentialProvider;
@@ -26,23 +27,18 @@ import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinCommand
 import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinInvokeCommandHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinInvokeCommandRequestOptions;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.models.DigitalTwinUpdateRequestOptions;
+import com.microsoft.azure.sdk.iot.service.digitaltwin.models.ServiceResponseWithHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.serialization.DeserializationHelpers;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.serialization.DigitalTwinStringSerializer;
+import com.microsoft.azure.sdk.iot.service.auth.TokenCredentialCache;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
 import com.microsoft.azure.sdk.iot.service.transport.TransportUtils;
-import com.microsoft.rest.RestClient;
-import com.microsoft.rest.ServiceResponse;
-import com.microsoft.rest.ServiceResponseBuilder;
-import com.microsoft.rest.ServiceResponseWithHeaders;
-import com.microsoft.rest.serializer.JacksonAdapter;
 import lombok.extern.slf4j.Slf4j;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-import java.net.Proxy;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import static com.microsoft.azure.sdk.iot.service.digitaltwin.helpers.Tools.*;
 
@@ -77,31 +73,15 @@ public class DigitalTwinAsyncClient {
         ServiceConnectionString serviceConnectionString = ServiceConnectionStringParser.parseConnectionString(connectionString);
         SasTokenProvider sasTokenProvider = serviceConnectionString.createSasTokenProvider();
         String httpsEndpoint = serviceConnectionString.getHttpsEndpoint();
-        final SimpleModule stringModule = new SimpleModule("String Serializer");
-        stringModule.addSerializer(new DigitalTwinStringSerializer(String.class, objectMapper));
 
-        JacksonAdapter adapter = new JacksonAdapter();
-        adapter.serializer().registerModule(stringModule);
-
-        ProxyOptions proxyOptions = options.getProxyOptions();
-        Proxy proxy = null;
-        if (proxyOptions != null)
-        {
-            proxy = proxyOptions.getProxy();
-        }
-
-        RestClient simpleRestClient = new RestClient.Builder()
-            .withConnectionTimeout(options.getHttpConnectTimeoutSeconds(), TimeUnit.SECONDS)
-            .withReadTimeout(options.getHttpReadTimeoutSeconds(), TimeUnit.SECONDS)
-            .withProxy(proxy) // assigning a null proxy here just means no proxy will be used
-            .withBaseUrl(httpsEndpoint)
-            .withCredentials(new ServiceClientCredentialsProvider(sasTokenProvider))
-            .withResponseBuilderFactory(new ServiceResponseBuilder.Factory())
-            .withSerializerAdapter(adapter)
+        HttpPipelinePolicy authPolicy = new ServiceClientCredentialsProvider(sasTokenProvider);
+        HttpPipeline pipeline = new HttpPipelineBuilder()
+            .policies(authPolicy)
             .build();
 
-        IotHubGatewayServiceAPIsImpl protocolLayerClient = new IotHubGatewayServiceAPIsImpl(simpleRestClient);
-        _protocolLayer = new DigitalTwinsImpl(simpleRestClient.retrofit(), protocolLayerClient);
+        ObjectMapper mapper = createObjectMapper();
+        IotHubGatewayServiceAPIsImpl protocolLayerClient = new IotHubGatewayServiceAPIsImpl(pipeline, mapper, httpsEndpoint);
+        _protocolLayer = new DigitalTwinsImpl(protocolLayerClient);
         commonConstructorSetup();
     }
 
@@ -126,36 +106,19 @@ public class DigitalTwinAsyncClient {
      */
     public DigitalTwinAsyncClient(String hostName, TokenCredential credential, DigitalTwinClientOptions options) {
         Objects.requireNonNull(options);
-        final SimpleModule stringModule = new SimpleModule("String Serializer");
-        stringModule.addSerializer(new DigitalTwinStringSerializer(String.class, objectMapper));
         TokenCredentialCache tokenCredentialCache = new TokenCredentialCache(credential);
         BearerTokenProvider bearerTokenProvider = () -> tokenCredentialCache.getTokenString();
 
-        JacksonAdapter adapter = new JacksonAdapter();
-        adapter.serializer().registerModule(stringModule);
-
-        ProxyOptions proxyOptions = options.getProxyOptions();
-        Proxy proxy = null;
-        if (proxyOptions != null)
-        {
-            proxy = proxyOptions.getProxy();
-        }
-
-        RestClient simpleRestClient = new RestClient.Builder()
-            .withBaseUrl(HTTPS_SCHEME + hostName) //hostname is only "my-iot-hub.azure-devices.net" so we need to add "https://"
-            .withConnectionTimeout(options.getHttpConnectTimeoutSeconds(), TimeUnit.SECONDS)
-            .withReadTimeout(options.getHttpReadTimeoutSeconds(), TimeUnit.SECONDS)
-            .withProxy(proxy) // assigning a null proxy here just means no proxy will be used
-            .withCredentials(new ServiceClientBearerTokenCredentialProvider(bearerTokenProvider))
-            .withResponseBuilderFactory(new ServiceResponseBuilder.Factory())
-            .withSerializerAdapter(adapter)
+        HttpPipelinePolicy authPolicy = new ServiceClientBearerTokenCredentialProvider(bearerTokenProvider);
+        HttpPipeline pipeline = new HttpPipelineBuilder()
+            .policies(authPolicy)
             .build();
 
-        IotHubGatewayServiceAPIsImpl protocolLayerClient = new IotHubGatewayServiceAPIsImpl(simpleRestClient);
-        _protocolLayer = new DigitalTwinsImpl(simpleRestClient.retrofit(), protocolLayerClient);
+        ObjectMapper mapper = createObjectMapper();
+        IotHubGatewayServiceAPIsImpl protocolLayerClient = new IotHubGatewayServiceAPIsImpl(pipeline, mapper, HTTPS_SCHEME + hostName);
+        _protocolLayer = new DigitalTwinsImpl(protocolLayerClient);
         commonConstructorSetup();
     }
-
 
     /**
      * Creates an implementation instance of {@link DigitalTwins} that is used to invoke the Digital Twin features
@@ -176,32 +139,16 @@ public class DigitalTwinAsyncClient {
      */
     public DigitalTwinAsyncClient(String hostName, AzureSasCredential azureSasCredential, DigitalTwinClientOptions options) {
         Objects.requireNonNull(options);
-        final SimpleModule stringModule = new SimpleModule("String Serializer");
-        stringModule.addSerializer(new DigitalTwinStringSerializer(String.class, objectMapper));
         SasTokenProvider sasTokenProvider = azureSasCredential::getSignature;
 
-        JacksonAdapter adapter = new JacksonAdapter();
-        adapter.serializer().registerModule(stringModule);
-
-        ProxyOptions proxyOptions = options.getProxyOptions();
-        Proxy proxy = null;
-        if (proxyOptions != null)
-        {
-            proxy = proxyOptions.getProxy();
-        }
-
-        RestClient simpleRestClient = new RestClient.Builder()
-            .withBaseUrl(HTTPS_SCHEME + hostName) //hostname is only "my-iot-hub.azure-devices.net" so we need to add "https://"
-            .withConnectionTimeout(options.getHttpConnectTimeoutSeconds(), TimeUnit.SECONDS)
-            .withReadTimeout(options.getHttpReadTimeoutSeconds(), TimeUnit.SECONDS)
-            .withProxy(proxy) // assigning a null proxy here just means no proxy will be used
-            .withCredentials(new ServiceClientCredentialsProvider(sasTokenProvider))
-            .withResponseBuilderFactory(new ServiceResponseBuilder.Factory())
-            .withSerializerAdapter(adapter)
+        HttpPipelinePolicy authPolicy = new ServiceClientCredentialsProvider(sasTokenProvider);
+        HttpPipeline pipeline = new HttpPipelineBuilder()
+            .policies(authPolicy)
             .build();
 
-        IotHubGatewayServiceAPIsImpl protocolLayerClient = new IotHubGatewayServiceAPIsImpl(simpleRestClient);
-        _protocolLayer = new DigitalTwinsImpl(simpleRestClient.retrofit(), protocolLayerClient);
+        ObjectMapper mapper = createObjectMapper();
+        IotHubGatewayServiceAPIsImpl protocolLayerClient = new IotHubGatewayServiceAPIsImpl(pipeline, mapper, HTTPS_SCHEME + hostName);
+        _protocolLayer = new DigitalTwinsImpl(protocolLayerClient);
         commonConstructorSetup();
     }
 
@@ -213,6 +160,14 @@ public class DigitalTwinAsyncClient {
      */
     public static DigitalTwinAsyncClient createFromConnectionString(String connectionString) {
         return new DigitalTwinAsyncClient(connectionString);
+    }
+
+    private static ObjectMapper createObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        final SimpleModule stringModule = new SimpleModule("String Serializer");
+        stringModule.addSerializer(new DigitalTwinStringSerializer(String.class, objectMapper));
+        mapper.registerModule(stringModule);
+        return mapper;
     }
 
     private static void commonConstructorSetup() {
@@ -229,7 +184,7 @@ public class DigitalTwinAsyncClient {
     public <T> Observable<T> getDigitalTwin(String digitalTwinId, Class<T> clazz)
     {
         return getDigitalTwinWithResponse(digitalTwinId, clazz)
-                .map(ServiceResponse::body);
+                .map(ServiceResponseWithHeaders::body);
     }
 
     /**
@@ -251,7 +206,7 @@ public class DigitalTwinAsyncClient {
                 .flatMap(response -> {
                     try {
                         T genericResponse = DeserializationHelpers.castObject(objectMapper, response.body(), clazz);
-                        return Observable.just(new ServiceResponseWithHeaders<>(genericResponse, response.headers(), response.response()));
+                        return Observable.just(new ServiceResponseWithHeaders<>(genericResponse, response.headers(), response.statusCode()));
                     } catch (JsonProcessingException e) {
                         return Observable.error(new IotHubException("Failed to parse the resonse"));
                     }
@@ -269,7 +224,7 @@ public class DigitalTwinAsyncClient {
     public Observable<Void> updateDigitalTwin(String digitalTwinId, List<Object> digitalTwinUpdateOperations)
     {
         return updateDigitalTwinWithResponse(digitalTwinId, digitalTwinUpdateOperations, null)
-                .map(ServiceResponse::body);
+                .map(ServiceResponseWithHeaders::body);
     }
 
     /**
@@ -307,7 +262,7 @@ public class DigitalTwinAsyncClient {
     public Observable<DigitalTwinCommandResponse> invokeCommand(String digitalTwinId, String commandName)
     {
         return invokeCommandWithResponse(digitalTwinId, commandName, null, null)
-                .map(ServiceResponse::body);
+                .map(ServiceResponseWithHeaders::body);
     }
 
     /**
@@ -319,9 +274,8 @@ public class DigitalTwinAsyncClient {
      */
     public Observable<DigitalTwinCommandResponse> invokeCommand(String digitalTwinId, String commandName, String payload)
     {
-        // Retrofit does not work well with null in body
         return invokeCommandWithResponse(digitalTwinId, commandName, payload, null)
-                .map(ServiceResponse::body);
+                .map(ServiceResponseWithHeaders::body);
     }
 
     /**
@@ -339,7 +293,6 @@ public class DigitalTwinAsyncClient {
             options = new DigitalTwinInvokeCommandRequestOptions();
         }
 
-        // Retrofit does not work well with null in body
         if (payload == null)
         {
             payload = "";
@@ -360,7 +313,7 @@ public class DigitalTwinAsyncClient {
     public Observable<DigitalTwinCommandResponse> invokeComponentCommand(String digitalTwinId, String componentName, String commandName)
     {
         return invokeComponentCommandWithResponse(digitalTwinId, componentName, commandName, null, null)
-                .map(ServiceResponse::body);
+                .map(ServiceResponseWithHeaders::body);
     }
 
     /**
@@ -374,7 +327,7 @@ public class DigitalTwinAsyncClient {
     public Observable<DigitalTwinCommandResponse> invokeComponentCommand(String digitalTwinId, String componentName, String commandName, String payload)
     {
         return invokeComponentCommandWithResponse(digitalTwinId, componentName, commandName, payload, null)
-                .map(ServiceResponse::body);
+                .map(ServiceResponseWithHeaders::body);
     }
 
     /**
@@ -393,7 +346,6 @@ public class DigitalTwinAsyncClient {
             options = new DigitalTwinInvokeCommandRequestOptions();
         }
 
-        // Retrofit does not work well with null in body
         if (payload == null)
         {
             payload = "";

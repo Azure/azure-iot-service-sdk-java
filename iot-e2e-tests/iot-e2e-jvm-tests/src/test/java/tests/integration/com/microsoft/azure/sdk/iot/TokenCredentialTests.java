@@ -25,7 +25,7 @@ import com.microsoft.azure.sdk.iot.service.digitaltwin.serialization.BasicDigita
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
 import com.microsoft.azure.sdk.iot.service.query.QueryClient;
 import com.microsoft.azure.sdk.iot.service.query.TwinQueryResponse;
-import com.microsoft.rest.ServiceResponseWithHeaders;
+import com.microsoft.azure.sdk.iot.service.digitaltwin.models.ServiceResponseWithHeaders;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assume;
 import org.junit.Ignore;

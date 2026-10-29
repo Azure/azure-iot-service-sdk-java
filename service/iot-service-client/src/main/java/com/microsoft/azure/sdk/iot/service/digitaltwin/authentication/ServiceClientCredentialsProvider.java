@@ -3,29 +3,30 @@
 
 package com.microsoft.azure.sdk.iot.service.digitaltwin.authentication;
 
-import com.microsoft.rest.credentials.ServiceClientCredentials;
+import com.azure.core.http.HttpPipelineCallContext;
+import com.azure.core.http.HttpPipelineNextPolicy;
+import com.azure.core.http.HttpResponse;
+import com.azure.core.http.policy.HttpPipelinePolicy;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+import reactor.core.publisher.Mono;
+
+import java.io.IOException;
 
 @AllArgsConstructor
-public class ServiceClientCredentialsProvider implements ServiceClientCredentials {
+public class ServiceClientCredentialsProvider implements HttpPipelinePolicy {
 
     private static final String AUTHORIZATION = "Authorization";
     @NonNull
     private final SasTokenProvider sasTokenProvider;
 
     @Override
-    public void applyCredentialsFilter(OkHttpClient.Builder clientBuilder) {
-        Interceptor authenticationInterceptor = chain -> {
-            Request authenticatedRequest = chain.request()
-                                                .newBuilder()
-                                                .header(AUTHORIZATION, sasTokenProvider.getSasToken())
-                                                .build();
-            return chain.proceed(authenticatedRequest);
-        };
-        clientBuilder.interceptors().add(authenticationInterceptor);
+    public Mono<HttpResponse> process(HttpPipelineCallContext context, HttpPipelineNextPolicy next) {
+        try {
+            context.getHttpRequest().setHeader(AUTHORIZATION, sasTokenProvider.getSasToken());
+        } catch (IOException e) {
+            return Mono.error(e);
+        }
+        return next.process();
     }
 }

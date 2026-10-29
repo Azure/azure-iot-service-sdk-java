@@ -12,8 +12,8 @@ import com.microsoft.azure.sdk.iot.service.digitaltwin.UpdateOperationUtility;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.customized.DigitalTwinGetHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.customized.DigitalTwinUpdateHeaders;
 import com.microsoft.azure.sdk.iot.service.digitaltwin.models.*;
-import com.microsoft.rest.RestException;
-import com.microsoft.rest.ServiceResponseWithHeaders;
+import com.azure.core.exception.HttpResponseException;
+import com.microsoft.azure.sdk.iot.service.digitaltwin.models.ServiceResponseWithHeaders;
 
 import java.io.IOException;
 import java.time.ZoneOffset;
@@ -73,7 +73,7 @@ public class TemperatureController {
         System.out.println("Digital Twin Model Id:" + modelId);
         System.out.println("Digital Twin: " + prettyString(getResponse.body()));
         System.out.println("Digital Twin eTag: " + getResponse.headers().eTag());
-        System.out.println("Digital Twin get response message: " + getResponse.response().message());
+        System.out.println("Digital Twin get response status code: " + getResponse.statusCode());
 
         return getResponse;
     }
@@ -101,7 +101,7 @@ public class TemperatureController {
         updateOperationUtility.appendAddComponentOperation(path, properties);
         List<Object> digitalTwinUpdateOperations = updateOperationUtility.getUpdateOperations();
         ServiceResponseWithHeaders<Void, DigitalTwinUpdateHeaders> updateResponse = client.updateDigitalTwinWithResponse(digitalTwinid, digitalTwinUpdateOperations, options);
-        System.out.println("Update Digital Twin response status: " + updateResponse.response().message());
+        System.out.println("Update Digital Twin response status: " + updateResponse.statusCode());
 
         getResponse = GetDigitalTwin();
 
@@ -122,7 +122,7 @@ public class TemperatureController {
         updateOperationUtility.appendReplaceComponentOperation(path, t2properties);
         digitalTwinUpdateOperations = updateOperationUtility.getUpdateOperations();
         updateResponse = client.updateDigitalTwinWithResponse(digitalTwinid, digitalTwinUpdateOperations, options);
-        System.out.println("Update Digital Twin response status: " + updateResponse.response().message());
+        System.out.println("Update Digital Twin response status: " + updateResponse.statusCode());
 
         getResponse = GetDigitalTwin();
 
@@ -135,7 +135,7 @@ public class TemperatureController {
         updateOperationUtility.appendRemoveComponentOperation(path);
         digitalTwinUpdateOperations = updateOperationUtility.getUpdateOperations();
         updateResponse = client.updateDigitalTwinWithResponse(digitalTwinid, digitalTwinUpdateOperations, options);
-        System.out.println("Update Digital Twin response status: " + updateResponse.response().message());
+        System.out.println("Update Digital Twin response status: " + updateResponse.statusCode());
 
         GetDigitalTwin();
     }
@@ -150,9 +150,9 @@ public class TemperatureController {
             System.out.println("Command " + commandName + ", payload: " + prettyString(commandResponse.body().getPayload(String.class)));
             System.out.println("Command " + commandName + ", status: " + commandResponse.body().getStatus());
             System.out.println("Command " + commandName + ", requestId: " + commandResponse.headers().getRequestId());
-        } catch (RestException ex)
+        } catch (HttpResponseException ex)
         {
-            if(ex.response().code() == 404)
+            if(ex.getResponse().getStatusCode() == 404)
             {
                 System.out.println("Ensure the device sample is running for this sample to succeed - https://github.com/Azure/azure-iot-sdk-java/tree/main/device/iot-device-samples/pnp-device-sample/temperature-controller-device-sample.");
             }
@@ -178,9 +178,9 @@ public class TemperatureController {
             System.out.println("Command " + commandName + ", payload: " + commandResponse.body().getPayload(String.class));
             System.out.println("Command " + commandName + ", status: " + commandResponse.body().getStatus());
             System.out.println("Command " + commandName + ", requestId: " + commandResponse.headers().getRequestId());
-        } catch (RestException ex)
+        } catch (HttpResponseException ex)
         {
-            if(ex.response().code() == 404)
+            if(ex.getResponse().getStatusCode() == 404)
             {
                 System.out.println("Ensure the device sample is running for this sample to succeed - https://github.com/Azure/azure-iot-sdk-java/tree/main/device/iot-device-samples/pnp-device-sample/temperature-controller-device-sample.");
             }
