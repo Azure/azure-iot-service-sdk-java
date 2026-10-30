@@ -3,24 +3,6 @@
 Release history for the Azure IoT Hub Service SDK for Java,
 `com.microsoft.azure.sdk.iot:iot-service-client`.
 
-This history was reconstructed on 2026-10-30. It covers all 81 versions in
-[Maven Central's version inventory](https://repo.maven.apache.org/maven2/com/microsoft/azure/sdk/iot/iot-service-client/maven-metadata.xml),
-including the two 2.0.0 previews, plus the four numbered releases of the
-[legacy preview package](#legacy-preview-package).
-The pending 2.1.11 release is also documented below.
-Device SDK, Device Provisioning Service SDK, and parent-POM versions are not
-service SDK releases and are not listed separately.
-
-Published-release dates below are the UTC dates in Maven Central's
-[artifact-directory listing](https://repo.maven.apache.org/maven2/com/microsoft/azure/sdk/iot/iot-service-client/).
-They can differ from GitHub announcement dates, release-tag names, and
-version-bump commit dates. Entries are ordered by version, not strictly by date;
-preview releases and LTS backports therefore overlap chronologically.
-
-Versions through 2.1.6 were released from
-[Azure/azure-iot-sdk-java](https://github.com/Azure/azure-iot-sdk-java/releases).
-
-
 ## 2.1.11 - Unreleased
 
 - Fix service clients failing to recover when IoT Hub detaches an AMQP link
