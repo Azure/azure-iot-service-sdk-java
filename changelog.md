@@ -19,10 +19,7 @@ preview releases and LTS backports therefore overlap chronologically.
 
 Versions through 2.1.6 were released from
 [Azure/azure-iot-sdk-java](https://github.com/Azure/azure-iot-sdk-java/releases).
-This standalone repository has no GitHub releases or tags as of the
-reconstruction date. Historical release notes, published POMs/source JARs, and
-the linked repository changes are used as evidence; imported or catch-up
-commits are not counted as new releases.
+
 
 ## 2.1.11 - Unreleased
 
