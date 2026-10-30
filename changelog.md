@@ -23,13 +23,6 @@ Versions through 2.1.6 were released from
 
 ## 2.1.11 - Unreleased
 
-Release preparation is tracked in PR #53. No Maven Central publication date
-is available as of 2026-10-30.
-
-Includes changes on `main` through
-[`c7c2f5d` (2026-10-28)](https://github.com/Azure/azure-iot-service-sdk-java/commit/c7c2f5d5bc74a5b23b125edb42bcde1f827f495a),
-after the published 2.1.10 package:
-
 - Fix service clients failing to recover when IoT Hub detaches an AMQP link
   without closing the connection, causing `MessagingClient.open()` to time
   out. Handle unexpected link detaches and closures, including events without
@@ -43,8 +36,7 @@ after the published 2.1.10 package:
 - Update Netty from 4.1.100.Final to 4.1.130.Final for samples/integration tests,
   and remove UDT references from the test proxy implementation.
 
-Sources: [2.1.11 release preparation, PR #53](https://github.com/Azure/azure-iot-service-sdk-java/pull/53),
-[AMQP recovery, PR #52](https://github.com/Azure/azure-iot-service-sdk-java/pull/52),
+Sources: [AMQP recovery, PR #52](https://github.com/Azure/azure-iot-service-sdk-java/pull/52),
 [reopen timeout, issue #51](https://github.com/Azure/azure-iot-service-sdk-java/issues/51),
 [timeout validation, PR #49](https://github.com/Azure/azure-iot-service-sdk-java/pull/49),
 [test dependencies, PR #48](https://github.com/Azure/azure-iot-service-sdk-java/pull/48).
